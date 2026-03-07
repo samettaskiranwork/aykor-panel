@@ -7,49 +7,59 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { margin: 0; padding: 0; background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
         
-        /* Görseldeki Orijinal Lacivert Navbar (image_1aae9c.png) */
+        /* Lacivert Ribbon Navbar */
         .aykor-navbar {
             background-color: #1a4a72;
-            padding: 0 20px;
+            padding: 0 25px;
             display: flex;
             align-items: center;
-            min-height: 45px;
+            min-height: 48px;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* Dropdown ve Link Stilleri */
         .nav-item-custom {
             color: white !important;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 12px 18px;
             font-size: 14px;
             display: inline-block;
-            cursor: pointer;
+            transition: 0.2s;
         }
-        .nav-item-custom:hover, .dropdown-item:hover { background-color: #245d8d; color: white !important; }
+        .nav-item-custom:hover, .dropdown-item:hover { background-color: #245d8d; }
         
-        .dropdown-menu { background-color: #1a4a72; border: 1px solid #245d8d; margin-top: 0; }
-        .dropdown-item { color: white; font-size: 13px; padding: 8px 20px; }
+        .dropdown-menu { background-color: #1a4a72; border: 1px solid #245d8d; }
+        .dropdown-item { color: white; font-size: 13px; padding: 10px 20px; }
+        .dropdown-item:hover { color: white; }
 
         .company-name {
             margin-left: auto;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            letter-spacing: 0.5px;
+            opacity: 0.9;
         }
 
         /* İçerik Alanları */
-        .section { display: none; padding: 30px; }
+        .section { display: none; padding: 25px; }
         .section.active { display: block; }
-        .card-custom { background: white; border: 1px solid #dee2e6; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .card-erp {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .table-erp { font-size: 12px; }
+        .table-erp thead { background-color: #343a40; color: white; }
     </style>
 </head>
 <body>
 
     <div class="aykor-navbar">
-        <span style="margin-right: 15px;">✔️</span>
+        <span class="me-3">🏠</span>
         
         <div class="dropdown d-inline-block">
             <a class="nav-item-custom dropdown-toggle" href="#" id="projectDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,7 +75,6 @@
         <a href="#" class="nav-item-custom">Future Project</a>
         <a href="#" class="nav-item-custom">Firma</a>
         <a href="#" class="nav-item-custom">Supplier</a>
-        <a href="#" class="nav-item-custom">Reports</a>
         
         <div class="company-name">
             AYKOR DENİZCİLİK MÜHENDİSLİK İNŞAAT SANAYİ VE TİCARET A.Ş
@@ -73,88 +82,148 @@
     </div>
 
     <div id="section-list" class="section active">
-        <div class="card-custom p-4">
-            <h4 class="mb-4">Proje Listesi</h4>
-            <table class="table table-striped table-hover">
-                <thead class="table-dark">
+        <div class="card-erp p-3 overflow-auto">
+            <h6 class="text-secondary mb-3">Aktif Proje Takip Listesi</h6>
+            <table class="table table-sm table-hover table-erp">
+                <thead>
                     <tr>
-                        <th>Proje Kodu</th>
+                        <th>ProjectCode</th>
+                        <th>Öncelik</th>
                         <th>Müşteri</th>
                         <th>Konu</th>
-                        <th>Durum</th>
+                        <th>ItemQty</th>
+                        <th>Deadline</th>
+                        <th>Time</th>
+                        <th>PE</th>
+                        <th>ST</th>
+                        <th>AnnoDt</th>
+                        <th>Tender Reference</th>
                     </tr>
                 </thead>
                 <tbody id="projectTableBody">
-                    <tr><td colspan="4" class="text-center">Yükleniyor...</td></tr>
+                    <tr><td colspan="11" class="text-center py-4">Veriler yükleniyor...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <div id="section-add" class="section">
-        <div class="card-custom p-4">
-            <h4 class="mb-4">Yeni Proje Kaydı</h4>
+        <div class="card-erp p-4">
+            <h5 class="mb-4 text-primary">Yeni Proje Oluştur</h5>
             <form id="projectForm" class="row g-3">
                 <div class="col-md-3">
-                    <label class="form-label">Project Code</label>
-                    <input type="text" class="form-control" name="project_code" required>
+                    <label class="form-label fw-bold">Project Code</label>
+                    <input type="text" class="form-control" name="project_code" maxlength="15" placeholder="Maks 15 Karakter" required>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Priority (1-3)</label>
-                    <input type="number" class="form-control" name="priority" value="2">
+                <div class="col-md-9">
+                    <label class="form-label fw-bold">Konu</label>
+                    <input type="text" class="form-control" name="subject" maxlength="70" placeholder="Maks 70 Karakter" required>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Customer</label>
-                    <input type="text" class="form-control" name="customer" required>
+                
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Customer Group</label>
+                    <select class="form-select" name="customer_group" required>
+                        <option value="">Grup Seçiniz...</option>
+                        <option value="03- T.Navy">03- T.Navy</option>
+                        <option value="47- Singapore">47- Singapore</option>
+                        <option value="50- NSPA">50- NSPA</option>
+                    </select>
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label">Customer Group</label>
-                    <input type="text" class="form-control" name="customer_group">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Müşteri</label>
+                    <select class="form-select" name="customer" required>
+                        <option value="">Müşteri Seçiniz...</option>
+                        <option value="Aselsan">Aselsan</option>
+                        <option value="Kalyon">Kalyon</option>
+                        <option value="Roketsan">Roketsan</option>
+                    </select>
                 </div>
-                <div class="col-md-12">
-                    <label class="form-label">Subject</label>
-                    <input type="text" class="form-control" name="subject" required>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Miktar</label>
+                    <input type="number" class="form-control" name="item_quantity" value="1">
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Project Engineer</label>
-                    <input type="text" class="form-control" name="proengineer">
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Öncelik (1-10)</label>
+                    <input type="number" class="form-control" name="priority" min="1" max="10" value="5">
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Bidbond Amount</label>
-                    <input type="number" step="0.01" class="form-control" name="bid_bond">
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Tender Reference</label>
+                    <input type="text" class="form-control" name="tender_reference" maxlength="50">
                 </div>
-                <div class="col-12 mt-4 text-end">
-                    <button type="submit" class="btn btn-primary px-5">Veritabanına Gönder</button>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Anno Dt (Duyuru Tarihi)</label>
+                    <input type="date" class="form-control" name="annodate">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Deadline (Son Tarih)</label>
+                    <input type="date" class="form-control" name="deadline">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Status (Durum)</label>
+                    <select class="form-select" name="prostatus" required>
+                        <option value="10">10 - Hazırlık</option>
+                        <option value="10.01">10.01 - Teknik İnceleme</option>
+                        <option value="10.02">10.02 - Fiyatlandırma</option>
+                        <option value="20">20 - Teklif Verildi</option>
+                        <option value="30">30 - Revize</option>
+                        <option value="50">50 - Kazandı</option>
+                        <option value="60">60 - Kaybetti</option>
+                        <option value="70">70 - İptal</option>
+                    </select>
+                </div>
+
+                <div class="col-12 mt-5 border-top pt-3 text-end">
+                    <button type="button" class="btn btn-secondary me-2" onclick="showSection('list')">İptal</button>
+                    <button type="submit" class="btn btn-primary px-5">Sisteme Kaydet</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Sekme Değiştirme
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById('section-' + sectionId).classList.add('active');
             if(sectionId === 'list') loadProjects();
         }
 
-        // Listeleme Fonksiyonu
         async function loadProjects() {
-            const res = await fetch('/api/projects');
-            const data = await res.json();
-            const tbody = document.getElementById('projectTableBody');
-            tbody.innerHTML = '';
-            data.forEach(p => {
-                tbody.innerHTML += `<tr><td><b>${p.project_code}</b></td><td>${p.customer}</td><td>${p.subject}</td><td><span class="badge bg-warning text-dark">${p.prostatus || '10'}</span></td></tr>`;
-            });
+            try {
+                const res = await fetch('/api/projects');
+                const data = await res.json();
+                const tbody = document.getElementById('projectTableBody');
+                tbody.innerHTML = '';
+                
+                data.forEach(p => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${p.project_code}</b></td>
+                            <td><span class="badge bg-light text-dark border">${p.priority}</span></td>
+                            <td>${p.customer}</td>
+                            <td>${p.subject}</td>
+                            <td>${p.item_quantity}</td>
+                            <td>${p.deadline || '-'}</td>
+                            <td>${p.deadline_time || '-'}</td>
+                            <td>${p.proengineer || '-'}</td>
+                            <td><span class="badge bg-primary">${p.prostatus}</span></td>
+                            <td>${p.annodate || '-'}</td>
+                            <td><small class="text-muted">${p.tender_reference || '-'}</small></td>
+                        </tr>`;
+                });
+            } catch (err) { console.error(err); }
         }
 
-        // Form Gönderme
         document.getElementById('projectForm').onsubmit = async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData.entries());
             
+            // Sayısal dönüşümler
+            data.priority = parseInt(data.priority);
+            data.item_quantity = parseInt(data.item_quantity);
+
             const res = await fetch('/api/add-project', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -162,11 +231,11 @@
             });
 
             if(res.ok) {
-                alert("Başarıyla Kaydedildi!");
+                alert("Proje başarıyla kaydedildi!");
                 e.target.reset();
                 showSection('list');
             } else {
-                alert("Hata Oluştu!");
+                alert("Hata oluştu, veritabanını kontrol edin.");
             }
         };
 
