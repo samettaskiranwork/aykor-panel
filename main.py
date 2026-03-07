@@ -24,14 +24,19 @@ def test_connection():
     try:
         conn = get_db_connection()
         if conn and conn.is_connected():
-            cursor = conn.cursor()
-            cursor.execute("SELECT 1") # Basit bir sorgu ile testi tamamla
+            # 'buffered=True' kullanarak sonuçların hafızada tutulmasını sağlıyoruz
+            cursor = conn.cursor(buffered=True) 
+            cursor.execute("SELECT 1")
+            cursor.fetchone() # Gelen cevabı oku (Unread result hatasını önler)
             cursor.close()
             conn.close()
-            return {"status": "BAŞARILI", "mesaj": "Veritabanına ulaşıldı!"}
-        return {"status": "BAĞLANTI YOK", "detay": "Bağlantı objesi oluşturulamadı."}
+            return {
+                "status": "BAŞARILI", 
+                "mesaj": "Tebrikler! MariaDB Cloud ile bağlantı resmen sağlandı.",
+                "detay": "ERP projenin veritabanı motoru artık çalışıyor."
+            }
+        return {"status": "BAĞLANTI YOK", "detay": "Bağlantı kuruldu ama aktif değil."}
     except Exception as e:
-        # Hata olduğunda bize 'using password: NO' mu diyor yoksa başka bir şey mi söyleyecek
         return {"status": "HATA", "detay": str(e)}
 
 @app.get("/")
