@@ -13,22 +13,22 @@ def get_db_connection():
         port=4042,
         user="dbpwf34135244",
         password=os.getenv("DB_PASSWORD"),
-        database="defaultdb", # Panelde gördüğün kesin isimle değiştir
+        database="aykor_dev", # İsmi buraya sabitledik
         ssl_ca="skysql_ca.pem",
         ssl_verify_cert=True
     )
 
 @app.get("/", response_class=HTMLResponse)
 def dashboard(request: Request):
-    # Ana sayfayı (dashboard.html) yükler
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @app.get("/api/projects")
 def get_projects_api():
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True) # Verileri sözlük yapısında (JSON gibi) getirir
-        cursor.execute("SELECT project_code, customer, subject, prostatus FROM projects LIMIT 50")
+        cursor = conn.cursor(dictionary=True)
+        # Tablodaki sütun isimlerin Google Sheets'tekiyle aynı olmalı
+        cursor.execute("SELECT project_code, customer, subject, prostatus FROM projects ORDER BY id DESC")
         projects = cursor.fetchall()
         cursor.close()
         conn.close()
