@@ -13,16 +13,18 @@ class ProjectCreate(BaseModel):
     subject: str
     item_quantity: int
     deadline: Optional[str] = None
-    tender_reference: Optional[str] = None
-    annodate: Optional[str] = None
+    deadline_time: Optional[str] = "10:00"
+    proengineer: Optional[str] = "Atanmadı"
     prostatus: str
+    annodate: Optional[str] = None
+    tender_reference: Optional[str] = None
 
 @router.get("/projects")
 async def list_projects():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        # Senin istediğin tüm detaylı sütunlar:
+        # SORGUMUZU TÜM SÜTUNLARI ÇEKECEK ŞEKİLDE GÜNCELLEDİK
         query = """SELECT project_code, priority, customer, subject, item_quantity, 
                           deadline, deadline_time, proengineer, prostatus, annodate, 
                           tender_reference FROM projects ORDER BY id DESC"""
@@ -40,11 +42,12 @@ async def create_project(project: ProjectCreate):
         conn = get_db_connection()
         cursor = conn.cursor()
         sql = """INSERT INTO projects 
-                 (project_code, priority, customer, customer_group, subject, item_quantity, deadline, tender_reference, annodate, prostatus) 
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                 (project_code, priority, customer, customer_group, subject, item_quantity, 
+                  deadline, deadline_time, proengineer, prostatus, annodate, tender_reference) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         values = (project.project_code, project.priority, project.customer, project.customer_group, 
-                  project.subject, project.item_quantity, project.deadline, project.tender_reference, 
-                  project.annodate, project.prostatus)
+                  project.subject, project.item_quantity, project.deadline, project.deadline_time,
+                  project.proengineer, project.prostatus, project.annodate, project.tender_reference)
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
