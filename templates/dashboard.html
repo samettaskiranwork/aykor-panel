@@ -23,7 +23,6 @@
                 <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('add')">➕ Add Project</a></li>
             </ul>
         </div>
-        <a class="nav-link-custom" href="#">Firma</a>
         <div class="ms-auto" style="font-size: 11px;">AYKOR DENİZCİLİK MÜHENDİSLİK A.Ş</div>
     </div>
 
@@ -31,9 +30,13 @@
         <div class="card-erp p-3">
             <h6 class="text-secondary mb-3">📋 Proje Takip Listesi</h6>
             <div class="table-responsive">
-                <table class="table table-sm table-hover" style="font-size: 12px;">
+                <table class="table table-sm table-hover table-striped" style="font-size: 11px;">
                     <thead class="table-dark">
-                        <tr><th>Kod</th><th>Müşteri</th><th>Konu</th><th>Status</th></tr>
+                        <tr>
+                            <th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th>
+                            <th>ItemQty</th><th>Deadline</th><th>DeadlineTime</th><th>PE</th>
+                            <th>ST</th><th>AnnoDt</th><th>Tender Reference</th>
+                        </tr>
                     </thead>
                     <tbody id="projectTableBody"></tbody>
                 </table>
@@ -65,6 +68,7 @@
                     <div class="mb-3"><label class="form-label fw-bold small">Miktar</label><input type="number" class="form-control" name="item_quantity" value="1"></div>
                     <div class="mb-3"><label class="form-label fw-bold small">Öncelik (1-10)</label><input type="number" class="form-control" name="priority" min="1" max="10" value="5"></div>
                     <div class="mb-3"><label class="form-label fw-bold small">Anno Dt</label><input type="date" class="form-control" name="annodate"></div>
+                    <div class="mb-3"><label class="form-label fw-bold small">Deadline</label><input type="date" class="form-control" name="deadline"></div>
                     <div class="mb-3"><label class="form-label fw-bold small">Status</label>
                         <select class="form-select" name="prostatus">
                             <option value="10">10 - Hazırlık</option>
@@ -78,12 +82,18 @@
     </div>
 
     <script>
-        function navigate(path) {
+        // GERİ TUŞU VE NAVİGASYON MANTIĞI
+        function navigate(path, updateUrl = true) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + path).classList.add('active');
-            history.pushState(null, "", "/" + path); // Linki profesyonelce değiştirir
-            if(path === 'list') loadProjects();
+            const target = document.getElementById('section-' + path);
+            if(target) {
+                target.classList.add('active');
+                if(updateUrl) history.pushState({section: path}, "", "/" + path);
+                if(path === 'list') loadProjects();
+            }
         }
+
+        window.onpopstate = (e) => { navigate(e.state ? e.state.section : 'list', false); };
 
         async function loadProjects() {
             const res = await fetch('/api/projects');
@@ -91,7 +101,13 @@
             const tbody = document.getElementById('projectTableBody');
             tbody.innerHTML = '';
             data.forEach(p => {
-                tbody.innerHTML += `<tr><td><b>${p.project_code}</b></td><td>${p.customer}</td><td>${p.subject}</td><td><span class="badge bg-primary">${p.prostatus}</span></td></tr>`;
+                tbody.innerHTML += `<tr>
+                    <td><b>${p.project_code}</b></td><td>${p.priority}</td><td>${p.customer}</td>
+                    <td>${p.subject}</td><td>${p.item_quantity}</td><td>${p.deadline || '-'}</td>
+                    <td>${p.deadline_time || '-'}</td><td>${p.proengineer || '-'}</td>
+                    <td><span class="badge bg-primary">${p.prostatus}</span></td><td>${p.annodate || '-'}</td>
+                    <td><small class="text-muted">${p.tender_reference || '-'}</small></td>
+                </tr>`;
             });
         }
 
@@ -102,10 +118,10 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
             });
-            if(res.ok) { alert("Başarıyla Kaydedildi!"); navigate('list'); }
+            if(res.ok) { alert("Kaydedildi!"); navigate('list'); }
         };
 
-        window.onload = () => { navigate(window.location.pathname.substring(1) || 'list'); };
+        window.onload = () => { navigate(window.location.pathname.substring(1) || 'list', false); };
     </script>
 </body>
 </html>
