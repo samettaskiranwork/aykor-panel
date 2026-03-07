@@ -14,7 +14,7 @@ def get_db_connection():
             port=4042,
             user="dbpwf34135244",
             password=os.getenv("FvETeQKGI8(FNcYKhlP0fat"), 
-            database="aykor_dev", # Buraya kendi oluşturduğun DB ismini yazmayı unutma!
+            database="aykor-dev", # Buraya kendi oluşturduğun DB ismini yazmayı unutma!
             ssl_ca="skysql_ca.pem", 
             ssl_verify_cert=True
         )
