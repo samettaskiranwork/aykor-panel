@@ -1,37 +1,46 @@
-import os
-import mysql.connector
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from typing import Optional
 
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+# Veritabanı modeline tam uyumlu Pydantic modeli
+class ProjectCreate(BaseModel):
+    project_code: str
+    priority: Optional[int] = 2  # 1: Düşük, 2: Orta, 3: Yüksek
+    customer: str
+    customer_group: Optional[str] = None
+    subject: str
+    item_quantity: Optional[int] = 0
+    deadline: Optional[str] = None
+    deadline_time: Optional[str] = None
+    proengineer: Optional[str] = None
+    prostatus: Optional[str] = "Aktif"
+    annodate: Optional[str] = None
+    tender_reference: Optional[str] = None
+    bid_bond: Optional[float] = 0.0
 
-def get_db_connection():
-    return mysql.connector.connect(
-        host="serverless-eu-central-1.sysp0000.db1.skysql.com",
-        port=4042,
-        user="dbpwf34135244",
-        password=os.getenv("DB_PASSWORD"),
-        database="aykor_dev", # İsmi buraya sabitledik
-        ssl_ca="skysql_ca.pem",
-        ssl_verify_cert=True
-    )
-
-@app.get("/", response_class=HTMLResponse)
-def dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.html", {"request": request})
-
-@app.get("/api/projects")
-def get_projects_api():
+@app.post("/api/add-project")
+def add_project(project: ProjectCreate):
     try:
         conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        # Tablodaki sütun isimlerin Google Sheets'tekiyle aynı olmalı
-        cursor.execute("SELECT project_code, customer, subject, prostatus FROM projects ORDER BY id DESC")
-        projects = cursor.fetchall()
+        cursor = conn.cursor()
+        
+        # Sütun isimleri senin DDL kodunla birebir eşlendi
+        sql = """INSERT INTO projects 
+                 (project_code, priority, customer, customer_group, subject, item_quantity, 
+                  deadline, deadline_time, proengineer, prostatus, annodate, 
+                  tender_reference, bid_bond) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        values = (
+            project.project_code, project.priority, project.customer, project.customer_group,
+            project.subject, project.item_quantity, project.deadline, project.deadline_time,
+            project.proengineer, project.prostatus, project.annodate,
+            project.tender_reference, project.bid_bond
+        )
+        
+        cursor.execute(sql, values)
+        conn.commit()
         cursor.close()
         conn.close()
-        return projects
+        return {"status": "success", "message": "Proje başarıyla kaydedildi."}
     except Exception as e:
-        return {"error": str(e)}
+        return {"status": "error", "message": str(e)}
