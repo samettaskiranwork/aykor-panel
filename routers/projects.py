@@ -22,7 +22,11 @@ async def list_projects():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM projects ORDER BY id DESC")
+        # Senin istediğin tüm detaylı sütunlar:
+        query = """SELECT project_code, priority, customer, subject, item_quantity, 
+                          deadline, deadline_time, proengineer, prostatus, annodate, 
+                          tender_reference FROM projects ORDER BY id DESC"""
+        cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
         conn.close()
