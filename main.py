@@ -23,24 +23,16 @@ def get_db_connection():
         return None
 
 @app.get("/test-db")
+@app.get("/test-db")
 def test_connection():
-    conn = get_db_connection()
-    if conn and conn.is_connected():
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM projects")
-        total = cursor.fetchone()[0]
-        cursor.close()
-        conn.close()
-        return {
-            "status": "BAŞARILI",
-            "message": f"MariaDB Cloud'a bağlandım. Tabloda toplam {total} satır var.",
-            "source": "SkySQL Serverless"
-        }
-    else:
-        return JSONResponse(
-            status_code=500,
-            content={"status": "HATA", "message": "Veritabanına bağlanılamadı. Şifre veya IP iznini kontrol et."}
-        )
+    try:
+        conn = get_db_connection()
+        if conn and conn.is_connected():
+            return {"status": "BAŞARILI"}
+        return {"status": "BAĞLANTI YOK"}
+    except Exception as e:
+        # Bu satır bize gerçek hatayı söyleyecek
+        return {"status": "HATA", "detay": str(e)}
 
 @app.get("/")
 def read_root():
