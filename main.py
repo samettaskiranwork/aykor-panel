@@ -14,7 +14,7 @@ def get_db_connection():
         port=4042,
         user="dbpwf34135244",
         password=db_pass, # Burası artık yukarıdaki değişkenden şifreyi alacak
-        database="aykor-dev", # Burayı 'aykor_dev' (alt tire) olarak da kontrol et gerekirse
+        database="aykor_dev", # Burayı 'aykor_dev' (alt tire) olarak da kontrol et gerekirse
         ssl_ca="skysql_ca.pem", 
         ssl_verify_cert=True
     )
