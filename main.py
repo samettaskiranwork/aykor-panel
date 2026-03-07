@@ -1,44 +1,37 @@
 import os
 import mysql.connector
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 def get_db_connection():
-    # Render panelinde "Key" kısmına ne yazdıysan onu buraya yazmalısın
-    db_pass = os.getenv("DB_PASSWORD") 
-    
     return mysql.connector.connect(
         host="serverless-eu-central-1.sysp0000.db1.skysql.com",
         port=4042,
         user="dbpwf34135244",
-        password=db_pass, # Burası artık yukarıdaki değişkenden şifreyi alacak
-        database="aykor_dev", # Burayı 'aykor_dev' (alt tire) olarak da kontrol et gerekirse
-        ssl_ca="skysql_ca.pem", 
+        password=os.getenv("DB_PASSWORD"),
+        database="defaultdb", # Panelde gördüğün kesin isimle değiştir
+        ssl_ca="skysql_ca.pem",
         ssl_verify_cert=True
     )
 
-@app.get("/test-db")
-def test_connection():
+@app.get("/", response_class=HTMLResponse)
+def dashboard(request: Request):
+    # Ana sayfayı (dashboard.html) yükler
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+@app.get("/api/projects")
+def get_projects_api():
     try:
         conn = get_db_connection()
-        if conn and conn.is_connected():
-            # 'buffered=True' kullanarak sonuçların hafızada tutulmasını sağlıyoruz
-            cursor = conn.cursor(buffered=True) 
-            cursor.execute("SELECT 1")
-            cursor.fetchone() # Gelen cevabı oku (Unread result hatasını önler)
-            cursor.close()
-            conn.close()
-            return {
-                "status": "BAŞARILI", 
-                "mesaj": "Tebrikler! MariaDB Cloud ile bağlantı resmen sağlandı.",
-                "detay": "ERP projenin veritabanı motoru artık çalışıyor."
-            }
-        return {"status": "BAĞLANTI YOK", "detay": "Bağlantı kuruldu ama aktif değil."}
+        cursor = conn.cursor(dictionary=True) # Verileri sözlük yapısında (JSON gibi) getirir
+        cursor.execute("SELECT project_code, customer, subject, prostatus FROM projects LIMIT 50")
+        projects = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return projects
     except Exception as e:
-        return {"status": "HATA", "detay": str(e)}
-
-@app.get("/")
-def read_root():
-    return {"status": "Uygulama çalışıyor", "test_url": "/test-db"}
+        return {"error": str(e)}
