@@ -6,10 +6,9 @@ from routers import projects
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# Proje modülünü ana sisteme bağlıyoruz
 app.include_router(projects.router)
 
-# Link değişse bile aynı sayfayı yüklemesi için bu yolları tanımladık
+# F5 YAPILDIĞINDA HATA ALMAMAK İÇİN TÜM YOLLARI BURAYA BAĞLADIK
 @app.get("/", response_class=HTMLResponse)
 @app.get("/list", response_class=HTMLResponse)
 @app.get("/add", response_class=HTMLResponse)
