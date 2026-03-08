@@ -10,21 +10,18 @@
     <style>
         :root { --aykor-blue: #1a4a72; --aykor-hover: #245d8d; }
         body { background-color: #f4f7f9; font-family: 'Segoe UI', sans-serif; }
-        
-        /* Navigasyon Ribbon Stili */
         .aykor-navbar { background-color: var(--aykor-blue); min-height: 48px; color: white; display: flex; align-items: center; padding: 0 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .nav-link-custom { color: white !important; text-decoration: none; padding: 12px 15px; font-size: 13px; cursor: pointer; display: inline-block; transition: 0.2s; }
         .nav-link-custom:hover { background-color: var(--aykor-hover); }
         .home-icon { font-size: 1.1rem; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 20px; }
-
-        /* Bölüm ve Kart Yapısı */
         .section { display: none; padding: 25px; animation: fadeIn 0.3s; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
         .card-erp { background: white; border-radius: 6px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid #dee2e6; }
         .table-erp { font-size: 11px; }
         .form-label { font-size: 12px; color: #555; }
+        .edit-link { text-decoration: none; color: #0d6efd; font-weight: bold; }
+        .edit-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -84,26 +81,9 @@
         </div>
     </div>
 
-    <div id="section-list" class="section">
-        <div class="card-erp p-3">
-            <h6 class="fw-bold mb-3"><i class="bi bi-list-task me-2"></i>Aktif Proje Listesi</h6>
-            <div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-p"></thead><tbody id="projectTableBody"></tbody></table></div>
-        </div>
-    </div>
-
-    <div id="section-budget-list" class="section">
-        <div class="card-erp p-3">
-            <h6 class="fw-bold mb-3 text-success"><i class="bi bi-cash-coin me-2"></i>Budget Work Listesi</h6>
-            <div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-b"></thead><tbody id="budgetTableBody"></tbody></table></div>
-        </div>
-    </div>
-
-    <div id="section-future-list" class="section">
-        <div class="card-erp p-3">
-            <h6 class="fw-bold mb-3 text-warning"><i class="bi bi-rocket-takeoff me-2"></i>Future Project Listesi</h6>
-            <div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-f"></thead><tbody id="futureTableBody"></tbody></table></div>
-        </div>
-    </div>
+    <div id="section-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">📋 Aktif Proje Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-p"></thead><tbody id="projectTableBody"></tbody></table></div></div></div>
+    <div id="section-budget-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3 text-success">💰 Budget Work Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-b"></thead><tbody id="budgetTableBody"></tbody></table></div></div></div>
+    <div id="section-future-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3 text-warning">🚀 Future Project Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-f"></thead><tbody id="futureTableBody"></tbody></table></div></div></div>
 
     <div id="section-add" class="section">
         <div class="card-erp p-4">
@@ -127,63 +107,34 @@
         </div>
     </div>
 
-    <div id="section-firma-list" class="section">
-        <div class="card-erp p-3">
-            <h6 class="fw-bold mb-3"><i class="bi bi-buildings me-2"></i>Müşteri Listesi</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-striped table-erp">
-                    <thead class="table-dark"><tr><th>Müşteri Adı</th><th>Grup</th><th>Temsilci</th><th>Web Sitesi</th></tr></thead>
-                    <tbody id="customerTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="section-firma-add" class="section">
-        <div class="card-erp p-4">
-            <h5 class="fw-bold mb-4 text-primary">🏢 Yeni Müşteri Ekle</h5>
-            <form id="customerForm" class="row">
+    <div id="section-edit" class="section">
+        <div class="card-erp p-4 border-primary">
+            <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-pencil-square"></i> Proje Güncelleme</h5>
+            <form id="editForm" class="row">
+                <input type="hidden" id="editId">
+                <input type="hidden" id="editType">
                 <div class="col-md-6 border-end">
-                    <div class="mb-3"><label class="form-label fw-bold">Müşteri Adı</label><input type="text" class="form-control" name="customer_name" required></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Müşteri Grubu</label><select id="customerGroupSelect" class="form-select" name="group_id" required></select></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Project Code</label><input type="text" class="form-control" name="project_code" required></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Konu</label><input type="text" class="form-control" name="subject" required></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Müşteri</label><input type="text" class="form-control" name="customer" required></div>
                 </div>
                 <div class="col-md-6 ps-4">
-                    <div class="mb-3"><label class="form-label fw-bold">Temsilci (Aykor)</label><select class="form-select" name="representative"><option value="Temsilci A">Temsilci A</option></select></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Web Sitesi</label><input type="text" class="form-control" name="website" placeholder="www.firma.com"></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Miktar</label><input type="number" class="form-control" name="item_quantity"></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Öncelik</label><input type="number" class="form-control" name="priority"></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Status</label><input type="text" class="form-control" name="prostatus"></div>
                 </div>
-                <div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-primary px-5">Firmayı Kaydet</button></div>
+                <div class="col-12 text-end mt-4 border-top pt-3">
+                    <button type="button" class="btn btn-secondary me-2" onclick="window.history.back()">İptal</button>
+                    <button type="submit" class="btn btn-success px-5">Güncellemeleri Kaydet</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <div id="section-supplier-list" class="section">
-        <div class="card-erp p-3">
-            <h6 class="fw-bold mb-3"><i class="bi bi-truck me-2"></i>Tedarikçi Listesi</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-striped table-erp">
-                    <thead class="table-dark"><tr><th>NCAGE</th><th>Tedarikçi Adı</th><th>Ülke</th><th>Web Sitesi</th></tr></thead>
-                    <tbody id="supplierTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="section-supplier-add" class="section">
-        <div class="card-erp p-4">
-            <h5 class="fw-bold mb-4 text-success">🚢 Yeni Tedarikçi Ekle</h5>
-            <form id="supplierForm" class="row">
-                <div class="col-md-6 border-end">
-                    <div class="mb-3"><label class="form-label fw-bold">Tedarikçi Adı</label><input type="text" class="form-control" name="supplier_name" required></div>
-                    <div class="mb-3"><label class="form-label fw-bold">NCAGE/MX Code</label><input type="text" class="form-control" name="ncage_code"></div>
-                </div>
-                <div class="col-md-6 ps-4">
-                    <div class="mb-3"><label class="form-label fw-bold">Ülke</label><input type="text" class="form-control" name="country"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Web Sitesi</label><input type="text" class="form-control" name="website"></div>
-                </div>
-                <div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-success px-5">Tedarikçiyi Kaydet</button></div>
-            </form>
-        </div>
-    </div>
+    <div id="section-firma-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🏢 Müşteri Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>Müşteri Adı</th><th>Grup</th><th>Temsilci</th><th>Web Sitesi</th></tr></thead><tbody id="customerTableBody"></tbody></table></div></div>
+    <div id="section-firma-add" class="section"><div class="card-erp p-4"><h5 class="fw-bold mb-4">🏢 Yeni Müşteri</h5><form id="customerForm" class="row"><div class="col-md-6 border-end"><div class="mb-3"><label class="form-label">Adı</label><input type="text" class="form-control" name="customer_name" required></div><div class="mb-3"><label class="form-label">Grubu</label><select id="customerGroupSelect" class="form-select" name="group_id" required></select></div></div><div class="col-md-6 ps-4"><div class="mb-3"><label class="form-label">Temsilci</label><select class="form-select" name="representative"><option value="Temsilci A">Temsilci A</option></select></div><div class="mb-3"><label class="form-label">Web</label><input type="text" class="form-control" name="website"></div></div><div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-primary">Firmayı Kaydet</button></div></form></div></div>
+    <div id="section-supplier-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🚢 Tedarikçi Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>NCAGE</th><th>Tedarikçi Adı</th><th>Ülke</th><th>Web</th></tr></thead><tbody id="supplierTableBody"></tbody></table></div></div>
+    <div id="section-supplier-add" class="section"><div class="card-erp p-4"><h5 class="fw-bold mb-4">🚢 Yeni Tedarikçi</h5><form id="supplierForm" class="row"><div class="col-md-6 border-end"><div class="mb-3"><label class="form-label">Adı</label><input type="text" class="form-control" name="supplier_name" required></div><div class="mb-3"><label class="form-label">NCAGE</label><input type="text" class="form-control" name="ncage_code"></div></div><div class="col-md-6 ps-4"><div class="mb-3"><label class="form-label">Ülke</label><input type="text" class="form-control" name="country"></div><div class="mb-3"><label class="form-label">Web</label><input type="text" class="form-control" name="website"></div></div><div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-success">Tedarikçiyi Kaydet</button></div></form></div></div>
 
     <script>
         const pHeaders = `<tr><th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th><th>ItemQty</th><th>Deadline</th><th>Time</th><th>PE</th><th>ST</th><th>AnnoDt</th><th>Tender Ref</th></tr>`;
@@ -191,23 +142,22 @@
 
         function navigate(path, updateUrl = true) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            
+            const target = document.getElementById('section-' + path);
+            if(target) target.classList.add('active');
+
             if(['add', 'budget-add', 'future-add'].includes(path)) {
                 document.getElementById('section-add').classList.add('active');
                 if(path === 'add') { document.getElementById('formTitle').innerText = "➕ Yeni Proje"; document.getElementById('formType').value = "project"; }
                 if(path === 'budget-add') { document.getElementById('formTitle').innerText = "💰 Yeni Budget Work"; document.getElementById('formType').value = "budget"; }
                 if(path === 'future-add') { document.getElementById('formTitle').innerText = "🚀 Yeni Future Project"; document.getElementById('formType').value = "future"; }
                 loadProjectFormData();
-            } else {
-                document.getElementById('section-' + path).classList.add('active');
             }
 
             if(updateUrl) history.pushState({section: path}, "", "/" + path);
             
-            // Veri Yüklemeleri
-            if(path === 'list') loadTableData('/api/projects', 'projectTableBody');
-            if(path === 'budget-list') loadTableData('/api/budget/list', 'budgetTableBody');
-            if(path === 'future-list') loadTableData('/api/future/list', 'futureTableBody');
+            if(path === 'list') loadTableData('/api/projects', 'projectTableBody', 'project');
+            if(path === 'budget-list') loadTableData('/api/budget/list', 'budgetTableBody', 'budget');
+            if(path === 'future-list') loadTableData('/api/future/list', 'futureTableBody', 'future');
             if(path === 'firma-list') loadCustomerTable();
             if(path === 'supplier-list') loadSupplierTable();
             if(path === 'firma-add') loadGroupsOnly();
@@ -215,17 +165,58 @@
 
         window.onpopstate = (e) => navigate(e.state ? e.state.section : 'home', false);
 
-        // --- VERİ YÜKLEME FONKSİYONLARI ---
-        async function loadTableData(url, bodyId) {
+        // --- DÜZENLEME MANTIĞI ---
+        async function openEditPage(type, id) {
+            const baseUrl = type === 'project' ? '/api/projects' : `/api/${type}`;
+            try {
+                const res = await fetch(`${baseUrl}/get/${id}`);
+                const data = await res.json();
+                
+                navigate('edit');
+                document.getElementById('editId').value = id;
+                document.getElementById('editType').value = type;
+
+                // Formu otomatik doldur
+                const form = document.getElementById('editForm');
+                Object.keys(data).forEach(key => {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if(input) input.value = data[key];
+                });
+            } catch (err) { alert("Veri çekilemedi!"); }
+        }
+
+        document.getElementById('editForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const type = document.getElementById('editType').value;
+            const baseUrl = type === 'project' ? '/api/projects' : `/api/${type}`;
+
+            const res = await fetch(`${baseUrl}/update/${id}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
+            });
+            if(res.ok) { alert("Güncellendi!"); navigate(type === 'project' ? 'list' : type + '-list'); }
+        };
+
+        // --- VERİ YÜKLEME ---
+        async function loadTableData(url, bodyId, type) {
             const res = await fetch(url);
             const data = await res.json();
-            const tbody = document.getElementById(bodyId);
-            `<td>
-    <a href="javascript:void(0)" class="fw-bold text-primary" 
-       onclick="openEditPage('${type}', ${p.id})">
-       ${p.project_code}
-    </a>
- </td>`
+            document.getElementById(bodyId).innerHTML = data.map(p => `
+                <tr>
+                    <td><a href="javascript:void(0)" class="edit-link" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
+                    <td>${p.priority || '-'}</td>
+                    <td>${p.customer}</td>
+                    <td>${p.subject}</td>
+                    <td>${p.item_quantity}</td>
+                    <td>${p.deadline || '-'}</td>
+                    <td>${p.deadline_time || '-'}</td>
+                    <td>${p.proengineer || '-'}</td>
+                    <td><span class="badge bg-primary">${p.prostatus}</span></td>
+                    <td>${p.annodate || '-'}</td>
+                    <td><small>${p.tender_reference || '-'}</small></td>
+                </tr>`).join('');
         }
 
         async function loadCustomerTable() {
