@@ -220,7 +220,12 @@
             const res = await fetch(url);
             const data = await res.json();
             const tbody = document.getElementById(bodyId);
-            tbody.innerHTML = data.map(p => `<tr><td><b>${p.project_code}</b></td><td>${p.priority}</td><td>${p.customer}</td><td>${p.subject}</td><td>${p.item_quantity}</td><td>${p.deadline || '-'}</td><td>${p.deadline_time || '-'}</td><td>${p.proengineer || '-'}</td><td><span class="badge bg-primary">${p.prostatus}</span></td><td>${p.annodate || '-'}</td><td><small>${p.tender_reference || '-'}</small></td></tr>`).join('');
+            `<td>
+    <a href="javascript:void(0)" class="fw-bold text-primary" 
+       onclick="openEditPage('${type}', ${p.id})">
+       ${p.project_code}
+    </a>
+ </td>`
         }
 
         async function loadCustomerTable() {
