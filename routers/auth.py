@@ -6,7 +6,7 @@ from typing import Optional
 
 router = APIRouter(prefix="/api/auth")
 
-# Şifreleme ayarlarını passlib üzerinden tanımlıyoruz
+# passlib'i bcrypt ile uyumlu çalışacak şekilde ayarlıyoruz
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class LoginRequest(BaseModel):
@@ -24,35 +24,40 @@ async def login(data: LoginRequest, response: Response):
         cursor.close()
         conn.close()
 
-        # 1. Kullanıcı Kontrolü
+        # 1. Kullanıcı var mı kontrolü
         if not user:
             raise HTTPException(status_code=401, detail="Hatalı kullanıcı adı veya şifre")
 
-        # 2. KRİTİK DÜZELTME: 
-        # Passlib ve Bcrypt kütüphaneleri arasındaki 72 byte çakışmasını
-        # önlemek için şifreyi doğrulamaya sokmadan önce sınırlıyoruz.
+        # 2. KRİTİK DÜZELTME (Truncate): 
+        # Yeni bcrypt kütüphanesinin çökmesini engellemek için şifreyi 72 karakterle sınırlıyoruz.
+        # Bu işlem senin 8 karakterlik şifreni bozmaz, sadece kütüphaneyi sakinleştirir.
         safe_password = data.password[:72]
 
         # 3. Şifre Doğrulama
-        # Veritabanındaki özet (hash) ile kullanıcının yazdığı şifreyi kıyaslar
-        if not pwd_context.verify(safe_password, user['password_hash']):
+        try:
+            is_valid = pwd_context.verify(safe_password, user['password_hash'])
+        except ValueError as e:
+            # Eğer hala hata verirse loglara detay yazdırıp 500 dönelim
+            print(f"Kütüphane Hatası: {str(e)}")
+            raise HTTPException(status_code=500, detail="Güvenlik kütüphanesi hatası")
+
+        if not is_valid:
             raise HTTPException(status_code=401, detail="Hatalı kullanıcı adı veya şifre")
 
-        # 4. Giriş Başarılı: Oturum Çerezi (Cookie) Ayarları
-        # Beni Hatırla işaretlendiyse 30 gün (saniye cinsinden), değilse tarayıcı kapanana kadar
+        # 4. Giriş Başarılı: Çerez (Cookie) Ayarları
         max_age = 30 * 24 * 60 * 60 if data.remember_me else None
-
         response.set_cookie(
             key="user_session", 
             value=user['username'], 
             max_age=max_age,
-            httponly=True,  # JS tarafından erişilemez (güvenlik için)
-            samesite="lax"   # Cross-site yönlendirme uyumluluğu için
+            httponly=True,
+            samesite="lax"
         )
         
         return {"status": "success", "user": user['full_name']}
 
+    except HTTPException as he:
+        raise he
     except Exception as e:
-        # Hata anında Render loglarında tam olarak ne olduğunu görebilmek için
-        print(f"--- LOGIN ERROR ---: {str(e)}")
+        print(f"Genel Hata: {str(e)}")
         raise HTTPException(status_code=500, detail="Sunucu tarafında bir hata oluştu")
