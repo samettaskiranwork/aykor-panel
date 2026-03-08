@@ -10,18 +10,27 @@
     <style>
         :root { --aykor-blue: #1a4a72; --aykor-hover: #245d8d; }
         body { background-color: #f4f7f9; font-family: 'Segoe UI', sans-serif; }
+        
+        /* Navbar */
         .aykor-navbar { background-color: var(--aykor-blue); min-height: 48px; color: white; display: flex; align-items: center; padding: 0 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .nav-link-custom { color: white !important; text-decoration: none; padding: 12px 15px; font-size: 13px; cursor: pointer; display: inline-block; transition: 0.2s; }
         .nav-link-custom:hover { background-color: var(--aykor-hover); }
         .home-icon { font-size: 1.1rem; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 20px; }
+
+        /* Sections */
         .section { display: none; padding: 25px; animation: fadeIn 0.3s; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .card-erp { background: white; border-radius: 6px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid #dee2e6; }
+        
+        /* Dashboard Elements */
+        .card-erp { background: white; border-radius: 6px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid #dee2e6; transition: 0.3s; }
+        .card-erp:hover { transform: translateY(-3px); }
         .table-erp { font-size: 11px; }
-        .form-label { font-size: 12px; color: #555; }
-        .edit-link { text-decoration: none; color: #0d6efd; font-weight: bold; }
+        .edit-link { text-decoration: none; color: #0d6efd; font-weight: bold; cursor: pointer; }
         .edit-link:hover { text-decoration: underline; }
+        
+        /* Custom Colors for Boxes */
+        .border-teal { border-left: 5px solid #2a9d8f !important; }
     </style>
 </head>
 <body>
@@ -73,71 +82,57 @@
         <div class="ms-auto small opacity-75">AYKOR DENİZCİLİK MÜHENDİSLİK A.Ş</div>
     </div>
 
-   <div id="section-home" class="section active">
-    <div class="row g-4 mb-4">
-        <div class="col-md-4">
-            <div class="card-erp p-3 border-start border-danger border-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary small fw-bold text-uppercase">[Working Projects]</h6>
-                        <h2 class="display-5 fw-bold mb-0" id="stat-working">-</h2>
-                        <span class="text-muted small">Adet</span>
+    <div id="section-home" class="section active">
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card-erp p-3 border-start border-danger border-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-secondary small fw-bold text-uppercase">[Working Projects]</h6>
+                            <h2 class="display-5 fw-bold mb-0" id="stat-working">-</h2>
+                        </div>
+                        <i class="bi bi-gear-fill text-danger opacity-25" style="font-size: 3rem;"></i>
                     </div>
-                    <i class="bi bi-gear-fill text-danger opacity-25" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-erp p-3 border-start border-info border-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-secondary small fw-bold text-uppercase">[Budget Works]</h6>
+                            <h2 class="display-5 fw-bold mb-0" id="stat-budget">-</h2>
+                        </div>
+                        <i class="bi bi-currency-dollar text-info opacity-25" style="font-size: 3rem;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-erp p-3 border-teal border-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-secondary small fw-bold text-uppercase">[Future Projects]</h6>
+                            <h2 class="display-5 fw-bold mb-0" id="stat-future">-</h2>
+                        </div>
+                        <i class="bi bi-rocket-takeoff text-success opacity-25" style="font-size: 3rem;"></i>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card-erp p-3 border-start border-info border-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary small fw-bold text-uppercase">[Budget Works]</h6>
-                        <h2 class="display-5 fw-bold mb-0" id="stat-budget">-</h2>
-                        <span class="text-muted small">Adet</span>
-                    </div>
-                    <i class="bi bi-currency-dollar text-info opacity-25" style="font-size: 3rem;"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card-erp p-3 border-start border-teal border-5" style="border-left-color: #2a9d8f !important;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary small fw-bold text-uppercase">[Future Projects]</h6>
-                        <h2 class="display-5 fw-bold mb-0" id="stat-future">-</h2>
-                        <span class="text-muted small">Adet</span>
-                    </div>
-                    <i class="bi bi-rocket-takeoff text-teal opacity-25" style="font-size: 3rem; color: #2a9d8f;"></i>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="card-erp p-3 mb-4 bg-dark text-white shadow-sm">
-        <div class="row text-center align-items-center">
-            <div class="col border-end border-secondary">
-                <div class="small text-uppercase opacity-75">New York</div>
-                <div class="fw-bold h5 mb-0" id="clock-ny">00:00:00</div>
-            </div>
-            <div class="col border-end border-secondary">
-                <div class="small text-uppercase opacity-75">Germany</div>
-                <div class="fw-bold h5 mb-0" id="clock-de">00:00:00</div>
-            </div>
-            <div class="col border-end border-secondary">
-                <div class="small text-uppercase fw-bold text-warning">Istanbul</div>
-                <div class="fw-bold h4 mb-0 text-warning" id="clock-tr">00:00:00</div>
-            </div>
-            <div class="col border-end border-secondary">
-                <div class="small text-uppercase opacity-75">Seoul</div>
-                <div class="fw-bold h5 mb-0" id="clock-kr">00:00:00</div>
-            </div>
-            <div class="col">
-                <div class="small text-uppercase opacity-75">Singapore</div>
-                <div class="fw-bold h5 mb-0" id="clock-sg">00:00:00</div>
+        <div class="card-erp p-3 mb-4 bg-dark text-white shadow-sm">
+            <div class="row text-center align-items-center">
+                <div class="col border-end border-secondary"><div class="small opacity-75">NEW YORK</div><div class="fw-bold" id="clock-ny">00:00:00</div></div>
+                <div class="col border-end border-secondary"><div class="small opacity-75">GERMANY</div><div class="fw-bold" id="clock-de">00:00:00</div></div>
+                <div class="col border-end border-secondary text-warning"><div class="small fw-bold">ISTANBUL</div><div class="fw-bold h5" id="clock-tr">00:00:00</div></div>
+                <div class="col border-end border-secondary"><div class="small opacity-75">SEOUL</div><div class="fw-bold" id="clock-kr">00:00:00</div></div>
+                <div class="col"><div class="small opacity-75">SINGAPORE</div><div class="fw-bold" id="clock-sg">00:00:00</div></div>
             </div>
         </div>
+        
+        <div class="text-center mt-5">
+            <img src="https://www.aykor.com/images/logo.png" style="opacity: 0.1; width: 300px;" alt="Aykor Logo">
+        </div>
     </div>
-</div>
 
     <div id="section-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">📋 Aktif Proje Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-p"></thead><tbody id="projectTableBody"></tbody></table></div></div></div>
     <div id="section-budget-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3 text-success">💰 Budget Work Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-b"></thead><tbody id="budgetTableBody"></tbody></table></div></div></div>
@@ -166,8 +161,8 @@
     </div>
 
     <div id="section-edit" class="section">
-        <div class="card-erp p-4 border-primary">
-            <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-pencil-square"></i> Proje Güncelleme</h5>
+        <div class="card-erp p-4 border-primary shadow">
+            <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-pencil-square"></i> Kayıt Detayı ve Güncelleme</h5>
             <form id="editForm" class="row">
                 <input type="hidden" id="editId">
                 <input type="hidden" id="editType">
@@ -179,22 +174,44 @@
                 <div class="col-md-6 ps-4">
                     <div class="mb-3"><label class="form-label fw-bold">Miktar</label><input type="number" class="form-control" name="item_quantity"></div>
                     <div class="mb-3"><label class="form-label fw-bold">Öncelik</label><input type="number" class="form-control" name="priority"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Status</label><input type="text" class="form-control" name="prostatus"></div>
+                    <div class="mb-3"><label class="form-label fw-bold">Durum (Status)</label><input type="text" class="form-control" name="prostatus"></div>
                 </div>
                 <div class="col-12 text-end mt-4 border-top pt-3">
-                    <button type="button" class="btn btn-secondary me-2" onclick="window.history.back()">İptal</button>
-                    <button type="submit" class="btn btn-success px-5">Güncellemeleri Kaydet</button>
+                    <button type="button" class="btn btn-secondary me-2" onclick="navigate('home')">İptal</button>
+                    <button type="submit" class="btn btn-success px-5">Verileri Güncelle</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="section-firma-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🏢 Müşteri Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>Müşteri Adı</th><th>Grup</th><th>Temsilci</th><th>Web Sitesi</th></tr></thead><tbody id="customerTableBody"></tbody></table></div></div>
+    <div id="section-firma-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🏢 Müşteri Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>Müşteri Adı</th><th>Grup</th><th>Temsilci</th><th>Web</th></tr></thead><tbody id="customerTableBody"></tbody></table></div></div>
     <div id="section-firma-add" class="section"><div class="card-erp p-4"><h5 class="fw-bold mb-4">🏢 Yeni Müşteri</h5><form id="customerForm" class="row"><div class="col-md-6 border-end"><div class="mb-3"><label class="form-label">Adı</label><input type="text" class="form-control" name="customer_name" required></div><div class="mb-3"><label class="form-label">Grubu</label><select id="customerGroupSelect" class="form-select" name="group_id" required></select></div></div><div class="col-md-6 ps-4"><div class="mb-3"><label class="form-label">Temsilci</label><select class="form-select" name="representative"><option value="Temsilci A">Temsilci A</option></select></div><div class="mb-3"><label class="form-label">Web</label><input type="text" class="form-control" name="website"></div></div><div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-primary">Firmayı Kaydet</button></div></form></div></div>
     <div id="section-supplier-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🚢 Tedarikçi Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>NCAGE</th><th>Tedarikçi Adı</th><th>Ülke</th><th>Web</th></tr></thead><tbody id="supplierTableBody"></tbody></table></div></div>
     <div id="section-supplier-add" class="section"><div class="card-erp p-4"><h5 class="fw-bold mb-4">🚢 Yeni Tedarikçi</h5><form id="supplierForm" class="row"><div class="col-md-6 border-end"><div class="mb-3"><label class="form-label">Adı</label><input type="text" class="form-control" name="supplier_name" required></div><div class="mb-3"><label class="form-label">NCAGE</label><input type="text" class="form-control" name="ncage_code"></div></div><div class="col-md-6 ps-4"><div class="mb-3"><label class="form-label">Ülke</label><input type="text" class="form-control" name="country"></div><div class="mb-3"><label class="form-label">Web</label><input type="text" class="form-control" name="website"></div></div><div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-success">Tedarikçiyi Kaydet</button></div></form></div></div>
 
     <script>
+        // --- SAATLER ---
+        function updateClocks() {
+            const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+            document.getElementById('clock-tr').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Europe/Istanbul' });
+            document.getElementById('clock-ny').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'America/New_York' });
+            document.getElementById('clock-de').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Europe/Berlin' });
+            document.getElementById('clock-kr').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Asia/Seoul' });
+            document.getElementById('clock-sg').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Asia/Singapore' });
+        }
+        setInterval(updateClocks, 1000);
+
+        // --- İSTATİSTİKLER ---
+        async function updateStats() {
+            try {
+                const [r1, r2, r3] = await Promise.all([fetch('/api/projects'), fetch('/api/budget/list'), fetch('/api/future/list')]);
+                const [p, b, f] = await Promise.all([r1.json(), r2.json(), r3.json()]);
+                document.getElementById('stat-working').innerText = p.length;
+                document.getElementById('stat-budget').innerText = b.length;
+                document.getElementById('stat-future').innerText = f.length;
+            } catch(e) {}
+        }
+
         const pHeaders = `<tr><th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th><th>ItemQty</th><th>Deadline</th><th>Time</th><th>PE</th><th>ST</th><th>AnnoDt</th><th>Tender Ref</th></tr>`;
         ['th-p', 'th-b', 'th-f'].forEach(id => document.getElementById(id).innerHTML = pHeaders);
 
@@ -212,7 +229,7 @@
             }
 
             if(updateUrl) history.pushState({section: path}, "", "/" + path);
-            
+            if(path === 'home') { updateStats(); updateClocks(); }
             if(path === 'list') loadTableData('/api/projects', 'projectTableBody', 'project');
             if(path === 'budget-list') loadTableData('/api/budget/list', 'budgetTableBody', 'budget');
             if(path === 'future-list') loadTableData('/api/future/list', 'futureTableBody', 'future');
@@ -223,22 +240,19 @@
 
         window.onpopstate = (e) => navigate(e.state ? e.state.section : 'home', false);
 
-        // --- DÜZENLEME MANTIĞI ---
+        // --- DÜZENLEME ---
         async function openEditPage(type, id) {
-            const baseUrl = type === 'project' ? '/api/projects' : `/api/${type}`;
+            const baseUrl = type === 'project' ? '/api' : `/api/${type}`;
             try {
                 const res = await fetch(`${baseUrl}/get/${id}`);
                 const data = await res.json();
-                
                 navigate('edit');
                 document.getElementById('editId').value = id;
                 document.getElementById('editType').value = type;
-
-                // Formu otomatik doldur
                 const form = document.getElementById('editForm');
-                Object.keys(data).forEach(key => {
-                    const input = form.querySelector(`[name="${key}"]`);
-                    if(input) input.value = data[key];
+                Object.keys(data).forEach(k => {
+                    const input = form.querySelector(`[name="${k}"]`);
+                    if(input) input.value = data[k] || "";
                 });
             } catch (err) { alert("Veri çekilemedi!"); }
         }
@@ -247,8 +261,7 @@
             e.preventDefault();
             const id = document.getElementById('editId').value;
             const type = document.getElementById('editType').value;
-            const baseUrl = type === 'project' ? '/api/projects' : `/api/${type}`;
-
+            const baseUrl = type === 'project' ? '/api' : `/api/${type}`;
             const res = await fetch(`${baseUrl}/update/${id}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -257,13 +270,13 @@
             if(res.ok) { alert("Güncellendi!"); navigate(type === 'project' ? 'list' : type + '-list'); }
         };
 
-        // --- VERİ YÜKLEME ---
+        // --- LİSTELEME ---
         async function loadTableData(url, bodyId, type) {
             const res = await fetch(url);
             const data = await res.json();
             document.getElementById(bodyId).innerHTML = data.map(p => `
                 <tr>
-                    <td><a href="javascript:void(0)" class="edit-link" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
+                    <td><a class="edit-link" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
                     <td>${p.priority || '-'}</td>
                     <td>${p.customer}</td>
                     <td>${p.subject}</td>
@@ -303,7 +316,7 @@
             document.getElementById('customerGroupSelect').innerHTML = '<option value="">Grup Seçiniz...</option>' + groups.map(g => `<option value="${g.id}">${g.group_name}</option>`).join('');
         }
 
-        // --- FORM GÖNDERME ---
+        // --- KAYIT ---
         document.getElementById('genericForm').onsubmit = async (e) => {
             e.preventDefault();
             const type = document.getElementById('formType').value;
