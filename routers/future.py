@@ -5,11 +5,12 @@ from database import get_db_connection
 
 router = APIRouter(prefix="/api/future")
 
+# Veri Modeli (NULL değerlere izin vermek için Optional yaptık)
 class ProjectCreate(BaseModel):
     project_code: str
-    priority: int
+    priority: Optional[int] = None
     customer: str
-    customer_group: str
+    customer_group: Optional[str] = None
     subject: str
     item_quantity: int
     deadline: Optional[str] = None
@@ -18,6 +19,7 @@ class ProjectCreate(BaseModel):
     annodate: Optional[str] = None
     tender_reference: Optional[str] = None
 
+# 1. LİSTELEME
 @router.get("/list")
 async def list_future_projects():
     try:
@@ -31,6 +33,7 @@ async def list_future_projects():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# 2. EKLEME
 @router.post("/add")
 async def create_future_project(project: ProjectCreate):
     try:
@@ -42,6 +45,42 @@ async def create_future_project(project: ProjectCreate):
         values = (project.project_code, project.priority, project.customer, project.customer_group, 
                   project.subject, project.item_quantity, project.deadline, project.prostatus, 
                   project.annodate, project.tender_reference)
+        cursor.execute(sql, values)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# 3. TEK BİR PROJE GETİRME (YENİ - Düzenleme ekranı için)
+@router.get("/get/{item_id}")
+async def get_future_project(item_id: int):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM future_projects WHERE id = %s", (item_id,))
+        item = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if not item:
+            raise HTTPException(status_code=404, detail="Future projesi bulunamadı")
+        return item
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# 4. GÜNCELLEME (YENİ!)
+@router.post("/update/{item_id}")
+async def update_future_project(item_id: int, project: ProjectCreate):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        sql = """UPDATE future_projects SET 
+                 project_code=%s, priority=%s, customer=%s, subject=%s, 
+                 item_quantity=%s, deadline=%s, prostatus=%s 
+                 WHERE id=%s"""
+        values = (project.project_code, project.priority, project.customer, project.subject, 
+                  project.item_quantity, project.deadline, project.prostatus, item_id)
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
