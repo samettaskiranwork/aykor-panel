@@ -1,47 +1,160 @@
-<div class="aykor-navbar">
-    <span class="me-3">🏠</span>
-    
-    <div class="dropdown d-inline-block">
-        <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Project</a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('list')">📁 Project List</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('add')">➕ Add Project</a></li>
-        </ul>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>AYKOR ERP - Kurumsal Yönetim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .aykor-navbar { background-color: #1a4a72; min-height: 48px; color: white; display: flex; align-items: center; padding: 0 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .nav-link-custom { color: white !important; text-decoration: none; padding: 12px 15px; font-size: 13px; cursor: pointer; display: inline-block; }
+        .nav-link-custom:hover { background-color: #245d8d; }
+        .section { display: none; padding: 25px; }
+        .section.active { display: block; }
+        .card-erp { background: white; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #ddd; }
+        .table-erp { font-size: 11px; }
+    </style>
+</head>
+<body>
+
+    <div class="aykor-navbar">
+        <span class="me-3">🏠</span>
+        
+        <div class="dropdown d-inline-block">
+            <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Project</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('list')">📁 Project List</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('add')">➕ Add Project</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown d-inline-block">
+            <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Budget Work</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('budget-list')">📁 Budget List</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('budget-add')">➕ Add Budget</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown d-inline-block">
+            <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Future Project</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('future-list')">📁 Future List</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('future-add')">➕ Add Future</a></li>
+            </ul>
+        </div>
+
+        <a class="nav-link-custom" href="javascript:void(0)" onclick="navigate('firma-list')">Firma</a>
+        <a class="nav-link-custom" href="javascript:void(0)" onclick="navigate('supplier-list')">Supplier</a>
+        <a class="nav-link-custom" href="javascript:void(0)" onclick="navigate('reports')">Reports</a>
+
+        <div class="ms-auto" style="font-size: 11px; opacity: 0.8;">AYKOR DENİZCİLİK MÜHENDİSLİK A.Ş</div>
     </div>
 
-    <div class="dropdown d-inline-block">
-        <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Budget Work</a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('budget-list')">📁 Budget List</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('budget-add')">➕ Add Budget</a></li>
-        </ul>
+    <div id="section-list" class="section active">
+        <div class="card-erp p-3">
+            <h6 class="text-primary mb-3">📋 Aktif Proje Listesi</h6>
+            <div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="head-p"></thead><tbody id="projectTableBody"></tbody></table></div>
+        </div>
     </div>
 
-    <div class="dropdown d-inline-block">
-        <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Future Project</a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('future-list')">📁 Future List</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('future-add')">➕ Add Future</a></li>
-        </ul>
+    <div id="section-budget-list" class="section">
+        <div class="card-erp p-3">
+            <h6 class="text-success mb-3">💰 Budget Work Listesi</h6>
+            <div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="head-b"></thead><tbody id="budgetTableBody"></tbody></table></div>
+        </div>
     </div>
 
-    <div class="dropdown d-inline-block">
-        <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Firma</a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('firma-list')">📁 Firma Listesi</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('firma-add')">➕ Yeni Firma</a></li>
-        </ul>
+    <div id="section-future-list" class="section">
+        <div class="card-erp p-3">
+            <h6 class="text-warning mb-3">🚀 Future Project Listesi</h6>
+            <div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="head-f"></thead><tbody id="futureTableBody"></tbody></table></div>
+        </div>
     </div>
 
-    <div class="dropdown d-inline-block">
-        <a class="nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Supplier</a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('supplier-list')">📁 Tedarikçiler</a></li>
-            <li><a class="dropdown-item" href="javascript:void(0)" onclick="navigate('supplier-add')">➕ Yeni Tedarikçi</a></li>
-        </ul>
+    <div id="section-add" class="section">
+        <div class="card-erp p-4">
+            <h5 id="formTitle" class="mb-4 text-primary">➕ Yeni Kayıt</h5>
+            <form id="genericForm" class="row">
+                <input type="hidden" id="formType" value="project">
+                <div class="col-md-6 border-end">
+                    <div class="mb-3"><label class="form-label small fw-bold">Project Code</label><input type="text" class="form-control" name="project_code" required></div>
+                    <div class="mb-3"><label class="form-label small fw-bold">Konu</label><input type="text" class="form-control" name="subject" required></div>
+                    <div class="mb-3"><label class="form-label small fw-bold">Customer Group</label><select id="groupSelect" class="form-select" name="customer_group"></select></div>
+                    <div class="mb-3"><label class="form-label small fw-bold">Müşteri</label><select id="customerSelect" class="form-select" name="customer"></select></div>
+                </div>
+                <div class="col-md-6 ps-4">
+                    <div class="mb-3"><label class="form-label small fw-bold">Miktar</label><input type="number" class="form-control" name="item_quantity" value="1"></div>
+                    <div class="mb-3"><label class="form-label small fw-bold">Öncelik (1-10)</label><input type="number" class="form-control" name="priority" min="1" max="10" value="5"></div>
+                    <div class="mb-3"><label class="form-label small fw-bold">Deadline</label><input type="date" class="form-control" name="deadline"></div>
+                    <div class="mb-3"><label class="form-label small fw-bold">Status</label><select class="form-select" name="prostatus"><option value="10">10-Hazırlık</option><option value="20">20-Teklif</option></select></div>
+                </div>
+                <div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-primary px-5">Veritabanına Kaydet</button></div>
+            </form>
+        </div>
     </div>
 
-    <a class="nav-link-custom" href="javascript:void(0)" onclick="navigate('reports')">Reports</a>
+    <script>
+        const tableHeaders = `<tr><th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th><th>ItemQty</th><th>Deadline</th><th>Time</th><th>PE</th><th>ST</th><th>AnnoDt</th><th>Tender Ref</th></tr>`;
+        document.getElementById('head-p').innerHTML = tableHeaders;
+        document.getElementById('head-b').innerHTML = tableHeaders;
+        document.getElementById('head-f').innerHTML = tableHeaders;
 
-    <div class="ms-auto" style="font-size: 11px;">AYKOR DENİZCİLİK MÜHENDİSLİK A.Ş</div>
-</div>
+        function navigate(path, updateUrl = true) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // "add" içeren yollar için ortak formu aç ama başlığı değiştir
+            if(path.includes('add')) {
+                document.getElementById('section-add').classList.add('active');
+                if(path === 'add') { document.getElementById('formTitle').innerText = "➕ Yeni Proje"; document.getElementById('formType').value = "project"; }
+                if(path === 'budget-add') { document.getElementById('formTitle').innerText = "💰 Yeni Budget Work"; document.getElementById('formType').value = "budget"; }
+                if(path === 'future-add') { document.getElementById('formTitle').innerText = "🚀 Yeni Future Project"; document.getElementById('formType').value = "future"; }
+                loadFormData();
+            } else {
+                document.getElementById('section-' + path).classList.add('active');
+            }
+
+            if(updateUrl) history.pushState({section: path}, "", "/" + path);
+            if(path === 'list') loadData('/api/projects', 'projectTableBody');
+            if(path === 'budget-list') loadData('/api/budget/list', 'budgetTableBody');
+            if(path === 'future-list') loadData('/api/future/list', 'futureTableBody');
+        }
+
+        window.onpopstate = (e) => { navigate(e.state ? e.state.section : 'list', false); };
+
+        async function loadData(url, bodyId) {
+            const res = await fetch(url);
+            const data = await res.json();
+            const tbody = document.getElementById(bodyId);
+            tbody.innerHTML = '';
+            data.forEach(p => {
+                tbody.innerHTML += `<tr><td><b>${p.project_code}</b></td><td>${p.priority}</td><td>${p.customer}</td><td>${p.subject}</td><td>${p.item_quantity}</td><td>${p.deadline || '-'}</td><td>${p.deadline_time || '-'}</td><td>${p.proengineer || '-'}</td><td><span class="badge bg-primary">${p.prostatus}</span></td><td>${p.annodate || '-'}</td><td><small>${p.tender_reference || '-'}</small></td></tr>`;
+            });
+        }
+
+        async function loadFormData() {
+            const resGroups = await fetch('/api/firms/groups');
+            const groups = await resGroups.json();
+            document.getElementById('groupSelect').innerHTML = '<option value="">Grup Seç...</option>' + groups.map(g => `<option value="${g.group_name}">${g.group_name}</option>`).join('');
+            
+            const resCust = await fetch('/api/firms/all-customers');
+            const customers = await resCust.json();
+            document.getElementById('customerSelect').innerHTML = '<option value="">Müşteri Seç...</option>' + customers.map(c => `<option value="${c.customer_name}">${c.customer_name}</option>`).join('');
+        }
+
+        document.getElementById('genericForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const type = document.getElementById('formType').value;
+            const endpoint = type === 'project' ? '/api/add-project' : `/api/${type}/add`;
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
+            });
+            if(res.ok) { alert("Kaydedildi!"); navigate(type === 'project' ? 'list' : type + '-list'); }
+        };
+
+        window.onload = () => { navigate(window.location.pathname.substring(1) || 'list', false); };
+    </script>
+</body>
+</html>
