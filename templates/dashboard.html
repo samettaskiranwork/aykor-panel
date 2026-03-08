@@ -10,26 +10,17 @@
     <style>
         :root { --aykor-blue: #1a4a72; --aykor-hover: #245d8d; }
         body { background-color: #f4f7f9; font-family: 'Segoe UI', sans-serif; }
-        
-        /* Navbar */
         .aykor-navbar { background-color: var(--aykor-blue); min-height: 48px; color: white; display: flex; align-items: center; padding: 0 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .nav-link-custom { color: white !important; text-decoration: none; padding: 12px 15px; font-size: 13px; cursor: pointer; display: inline-block; transition: 0.2s; }
         .nav-link-custom:hover { background-color: var(--aykor-hover); }
         .home-icon { font-size: 1.1rem; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 20px; }
-
-        /* Sections */
         .section { display: none; padding: 25px; animation: fadeIn 0.3s; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Dashboard Elements */
         .card-erp { background: white; border-radius: 6px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid #dee2e6; transition: 0.3s; }
-        .card-erp:hover { transform: translateY(-3px); }
         .table-erp { font-size: 11px; }
         .edit-link { text-decoration: none; color: #0d6efd; font-weight: bold; cursor: pointer; }
         .edit-link:hover { text-decoration: underline; }
-        
-        /* Custom Colors for Boxes */
         .border-teal { border-left: 5px solid #2a9d8f !important; }
     </style>
 </head>
@@ -87,10 +78,7 @@
             <div class="col-md-4">
                 <div class="card-erp p-3 border-start border-danger border-5">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-secondary small fw-bold text-uppercase">[Working Projects]</h6>
-                            <h2 class="display-5 fw-bold mb-0" id="stat-working">-</h2>
-                        </div>
+                        <div><h6 class="text-secondary small fw-bold text-uppercase">[Working Projects]</h6><h2 class="display-5 fw-bold mb-0" id="stat-working">-</h2></div>
                         <i class="bi bi-gear-fill text-danger opacity-25" style="font-size: 3rem;"></i>
                     </div>
                 </div>
@@ -98,10 +86,7 @@
             <div class="col-md-4">
                 <div class="card-erp p-3 border-start border-info border-5">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-secondary small fw-bold text-uppercase">[Budget Works]</h6>
-                            <h2 class="display-5 fw-bold mb-0" id="stat-budget">-</h2>
-                        </div>
+                        <div><h6 class="text-secondary small fw-bold text-uppercase">[Budget Works]</h6><h2 class="display-5 fw-bold mb-0" id="stat-budget">-</h2></div>
                         <i class="bi bi-currency-dollar text-info opacity-25" style="font-size: 3rem;"></i>
                     </div>
                 </div>
@@ -109,10 +94,7 @@
             <div class="col-md-4">
                 <div class="card-erp p-3 border-teal border-5">
                     <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="text-secondary small fw-bold text-uppercase">[Future Projects]</h6>
-                            <h2 class="display-5 fw-bold mb-0" id="stat-future">-</h2>
-                        </div>
+                        <div><h6 class="text-secondary small fw-bold text-uppercase">[Future Projects]</h6><h2 class="display-5 fw-bold mb-0" id="stat-future">-</h2></div>
                         <i class="bi bi-rocket-takeoff text-success opacity-25" style="font-size: 3rem;"></i>
                     </div>
                 </div>
@@ -128,9 +110,19 @@
                 <div class="col"><div class="small opacity-75">SINGAPORE</div><div class="fw-bold" id="clock-sg">00:00:00</div></div>
             </div>
         </div>
-        
-        <div class="text-center mt-5">
-            <img src="https://www.aykor.com/images/logo.png" style="opacity: 0.1; width: 300px;" alt="Aykor Logo">
+
+        <div class="card-erp p-3 border-top border-warning border-5 shadow-sm">
+            <h6 class="fw-bold mb-3 text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i> Kritik Projeler (Önümüzdeki 7 Gün)</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover table-erp mb-0">
+                    <thead class="table-light">
+                        <tr><th>Kod</th><th>Müşteri</th><th>Konu</th><th>Deadline</th><th>Kalan Gün</th><th>Durum</th></tr>
+                    </thead>
+                    <tbody id="upcomingTableBody">
+                        <tr><td colspan="6" class="text-center py-3 text-muted">Veriler yükleniyor...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -164,8 +156,7 @@
         <div class="card-erp p-4 border-primary shadow">
             <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-pencil-square"></i> Kayıt Detayı ve Güncelleme</h5>
             <form id="editForm" class="row">
-                <input type="hidden" id="editId">
-                <input type="hidden" id="editType">
+                <input type="hidden" id="editId"><input type="hidden" id="editType">
                 <div class="col-md-6 border-end">
                     <div class="mb-3"><label class="form-label fw-bold">Project Code</label><input type="text" class="form-control" name="project_code" required></div>
                     <div class="mb-3"><label class="form-label fw-bold">Konu</label><input type="text" class="form-control" name="subject" required></div>
@@ -176,10 +167,7 @@
                     <div class="mb-3"><label class="form-label fw-bold">Öncelik</label><input type="number" class="form-control" name="priority"></div>
                     <div class="mb-3"><label class="form-label fw-bold">Durum (Status)</label><input type="text" class="form-control" name="prostatus"></div>
                 </div>
-                <div class="col-12 text-end mt-4 border-top pt-3">
-                    <button type="button" class="btn btn-secondary me-2" onclick="navigate('home')">İptal</button>
-                    <button type="submit" class="btn btn-success px-5">Verileri Güncelle</button>
-                </div>
+                <div class="col-12 text-end mt-4 border-top pt-3"><button type="button" class="btn btn-secondary me-2" onclick="navigate('home')">İptal</button><button type="submit" class="btn btn-success px-5">Verileri Güncelle</button></div>
             </form>
         </div>
     </div>
@@ -212,6 +200,42 @@
             } catch(e) {}
         }
 
+        // --- KRİTİK DEADLINE FİLTRELEME (YENİ!) ---
+        async function updateUpcomingDeadlines() {
+            try {
+                const res = await fetch('/api/projects');
+                const projects = await res.json();
+                const tbody = document.getElementById('upcomingTableBody');
+                tbody.innerHTML = '';
+                const today = new Date(); today.setHours(0,0,0,0);
+                const nextWeek = new Date(); nextWeek.setDate(today.getDate() + 7);
+
+                const upcoming = projects.filter(p => {
+                    if(!p.deadline) return false;
+                    const d = new Date(p.deadline);
+                    return d >= today && d <= nextWeek;
+                });
+
+                if(upcoming.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Önümüzdeki 7 gün için kritik bir deadline bulunmuyor.</td></tr>';
+                    return;
+                }
+
+                upcoming.sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
+                upcoming.forEach(p => {
+                    const d = new Date(p.deadline);
+                    const diff = Math.ceil((d - today) / (1000*60*60*24));
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><a class="edit-link text-primary" onclick="openEditPage('project', ${p.id})">${p.project_code}</a></td>
+                            <td>${p.customer}</td><td>${p.subject}</td><td class="text-danger fw-bold">${p.deadline}</td>
+                            <td><span class="badge ${diff <= 2 ? 'bg-danger' : 'bg-warning text-dark'}">${diff} gün kaldı</span></td>
+                            <td><span class="badge bg-secondary">${p.prostatus}</span></td>
+                        </tr>`;
+                });
+            } catch(e) {}
+        }
+
         const pHeaders = `<tr><th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th><th>ItemQty</th><th>Deadline</th><th>Time</th><th>PE</th><th>ST</th><th>AnnoDt</th><th>Tender Ref</th></tr>`;
         ['th-p', 'th-b', 'th-f'].forEach(id => document.getElementById(id).innerHTML = pHeaders);
 
@@ -229,7 +253,7 @@
             }
 
             if(updateUrl) history.pushState({section: path}, "", "/" + path);
-            if(path === 'home') { updateStats(); updateClocks(); }
+            if(path === 'home') { updateStats(); updateClocks(); updateUpcomingDeadlines(); }
             if(path === 'list') loadTableData('/api/projects', 'projectTableBody', 'project');
             if(path === 'budget-list') loadTableData('/api/budget/list', 'budgetTableBody', 'budget');
             if(path === 'future-list') loadTableData('/api/future/list', 'futureTableBody', 'future');
@@ -276,7 +300,7 @@
             const data = await res.json();
             document.getElementById(bodyId).innerHTML = data.map(p => `
                 <tr>
-                    <td><a class="edit-link" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
+                    <td><a class="edit-link text-primary" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
                     <td>${p.priority || '-'}</td>
                     <td>${p.customer}</td>
                     <td>${p.subject}</td>
@@ -321,7 +345,11 @@
             e.preventDefault();
             const type = document.getElementById('formType').value;
             const endpoint = type === 'project' ? '/api/add-project' : `/api/${type}/add`;
-            const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            data.priority = parseInt(data.priority) || 5;
+            data.item_quantity = parseInt(data.item_quantity) || 1;
+            const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
             if(res.ok) { alert("Kaydedildi!"); navigate(type === 'project' ? 'list' : type + '-list'); }
         };
 
