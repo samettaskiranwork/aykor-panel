@@ -73,13 +73,71 @@
         <div class="ms-auto small opacity-75">AYKOR DENİZCİLİK MÜHENDİSLİK A.Ş</div>
     </div>
 
-    <div id="section-home" class="section active">
-        <div class="card-erp p-5 text-center">
-            <i class="bi bi-shield-check text-primary display-1"></i>
-            <h2 class="mt-4">AYKOR ERP Komuta Merkezi</h2>
-            <p class="text-muted">Lütfen menüden işlem yapmak istediğiniz modülü seçiniz.</p>
+   <div id="section-home" class="section active">
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card-erp p-3 border-start border-danger border-5">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary small fw-bold text-uppercase">[Working Projects]</h6>
+                        <h2 class="display-5 fw-bold mb-0" id="stat-working">-</h2>
+                        <span class="text-muted small">Adet</span>
+                    </div>
+                    <i class="bi bi-gear-fill text-danger opacity-25" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-erp p-3 border-start border-info border-5">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary small fw-bold text-uppercase">[Budget Works]</h6>
+                        <h2 class="display-5 fw-bold mb-0" id="stat-budget">-</h2>
+                        <span class="text-muted small">Adet</span>
+                    </div>
+                    <i class="bi bi-currency-dollar text-info opacity-25" style="font-size: 3rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-erp p-3 border-start border-teal border-5" style="border-left-color: #2a9d8f !important;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-secondary small fw-bold text-uppercase">[Future Projects]</h6>
+                        <h2 class="display-5 fw-bold mb-0" id="stat-future">-</h2>
+                        <span class="text-muted small">Adet</span>
+                    </div>
+                    <i class="bi bi-rocket-takeoff text-teal opacity-25" style="font-size: 3rem; color: #2a9d8f;"></i>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="card-erp p-3 mb-4 bg-dark text-white shadow-sm">
+        <div class="row text-center align-items-center">
+            <div class="col border-end border-secondary">
+                <div class="small text-uppercase opacity-75">New York</div>
+                <div class="fw-bold h5 mb-0" id="clock-ny">00:00:00</div>
+            </div>
+            <div class="col border-end border-secondary">
+                <div class="small text-uppercase opacity-75">Germany</div>
+                <div class="fw-bold h5 mb-0" id="clock-de">00:00:00</div>
+            </div>
+            <div class="col border-end border-secondary">
+                <div class="small text-uppercase fw-bold text-warning">Istanbul</div>
+                <div class="fw-bold h4 mb-0 text-warning" id="clock-tr">00:00:00</div>
+            </div>
+            <div class="col border-end border-secondary">
+                <div class="small text-uppercase opacity-75">Seoul</div>
+                <div class="fw-bold h5 mb-0" id="clock-kr">00:00:00</div>
+            </div>
+            <div class="col">
+                <div class="small text-uppercase opacity-75">Singapore</div>
+                <div class="fw-bold h5 mb-0" id="clock-sg">00:00:00</div>
+            </div>
+        </div>
+    </div>
+</div>
 
     <div id="section-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">📋 Aktif Proje Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-p"></thead><tbody id="projectTableBody"></tbody></table></div></div></div>
     <div id="section-budget-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3 text-success">💰 Budget Work Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-b"></thead><tbody id="budgetTableBody"></tbody></table></div></div></div>
