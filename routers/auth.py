@@ -1,6 +1,5 @@
 from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel
-import bcrypt
 from database import get_db_connection
 from typing import Optional
 
@@ -13,7 +12,6 @@ class LoginRequest(BaseModel):
 
 @router.post("/login")
 async def login(data: LoginRequest, response: Response):
-    conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -23,21 +21,13 @@ async def login(data: LoginRequest, response: Response):
         conn.close()
 
         if not user:
-            print(f"DEBUG: '{data.username}' kullanıcısı bulunamadı.")
-            raise HTTPException(status_code=401, detail="Hatalı kullanıcı adı veya şifre")
+            raise HTTPException(status_code=401, detail="Kullanıcı bulunamadı")
 
-        # Şifreleri temizle ve byte formatına çevir
-        password_bytes = data.password.strip().encode('utf-8')
-        hashed_from_db = user['password_hash'].strip().encode('utf-8')
-
-        # BCrypt kontrolü (HTTPException fırlatmadan önce sonucu bir değişkene alıyoruz)
-        try:
-            is_correct = bcrypt.checkpw(password_bytes, hashed_from_db)
-        except Exception as e:
-            print(f"SİSTEM HATASI (Bcrypt Format): {str(e)}")
-            raise HTTPException(status_code=500, detail="Veritabanındaki şifre formatı hatalı!")
-
-        if is_correct:
+        # --- DÜZ MANTIK KONTROL (Şifreleme YOK) ---
+        # Veritabanındaki yazı ile formdan gelen yazı bizzat aynı mı?
+        if data.password.strip() == user['password_hash'].strip():
+            
+            # Giriş Başarılı
             max_age = 30 * 24 * 60 * 60 if data.remember_me else None
             response.set_cookie(
                 key="user_session", 
@@ -48,13 +38,7 @@ async def login(data: LoginRequest, response: Response):
             )
             return {"status": "success", "user": user['full_name']}
         else:
-            # ŞİFRE YANLIŞSA BURAYA DÜŞER
-            print(f"DEBUG: {data.username} için hatalı şifre denemesi.")
-            raise HTTPException(status_code=401, detail="Hatalı kullanıcı adı veya şifre")
+            raise HTTPException(status_code=401, detail="Şifre eşleşmedi")
 
-    except HTTPException as he:
-        raise he  # Hatalı şifre uyarısını olduğu gibi fırlat
     except Exception as e:
-        if conn: conn.close()
-        print(f"SİSTEM HATASI (Genel): {str(e)}")
-        raise HTTPException(status_code=500, detail="Sunucu hatası")
+        raise HTTPException(status_code=500, detail=f"Sistem Hatası: {str(e)}")
