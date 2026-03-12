@@ -1,35 +1,64 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from database import get_db_connection
 
-router = APIRouter(prefix="/api")
+router = APIRouter(prefix="/api/projects")
 
-# Veri Modeli - Diğer modüllerle uyumlu hale getirildi
+# 1. VERİ MODELİ: Kullanıcının formdan gönderdiği yapı
 class ProjectCreate(BaseModel):
     project_code: str
-    priority: Optional[int] = None
-    customer: str
-    customer_group: Optional[str] = None
+    priority: int           # 1-10 arası
+    customer_groups: str    # customer_groups tablosundan group_name
+    customer: str           # customers tablosundan customer_name
     subject: str
     item_quantity: int
     deadline: Optional[str] = None
-    deadline_time: Optional[str] = "10:00"
-    proengineer: Optional[str] = "Atanmadı"
-    prostatus: str
-    annodate: Optional[str] = None
-    tender_reference: Optional[str] = None
+    proengineer: str        # users tablosundan full_name
+    project_type: str       # 'System' veya 'Spare Part'
 
-# 1. TÜM PROJELERİ LİSTELE (Kritik: id eklendi)
-@router.get("/projects")
+# --- YARDIMCI FONKSİYONLAR: Dropdown (Açılır Menü) Verileri ---
+
+@router.get("/get-dropdowns")
+async def get_form_dropdowns():
+    """Formdaki seçim kutularını doldurmak için tüm verileri tek seferde getirir"""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Müşteri Grupları
+        cursor.execute("SELECT group_name FROM customer_groups")
+        groups = [row[0] for row in cursor.fetchall()]
+        
+        # Müşteriler
+        cursor.execute("SELECT customer_name FROM customers")
+        customers = [row[0] for row in cursor.fetchall()]
+        
+        # Mühendisler (PE)
+        cursor.execute("SELECT full_name FROM users")
+        engineers = [row[0] for row in cursor.fetchall()]
+        
+        cursor.close()
+        conn.close()
+        
+        return {
+            "groups": groups,
+            "customers": customers,
+            "engineers": engineers,
+            "project_types": ["System", "Spare Part"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Dropdown verileri çekilemedi: {str(e)}")
+
+# --- ANA FONKSİYONLAR ---
+
+@router.get("/")
 async def list_projects():
+    """Tüm projeleri listeler"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        # Sütun listesine 'id' eklendi, böylece frontend projeyi tanıyabilir
-        query = """SELECT id, project_code, priority, customer, customer_group, subject, item_quantity, 
-                          deadline, deadline_time, proengineer, prostatus, annodate, 
-                          tender_reference FROM projects ORDER BY id DESC"""
+        query = "SELECT * FROM projects ORDER BY id DESC"
         cursor.execute(query)
         data = cursor.fetchall()
         cursor.close()
@@ -38,19 +67,21 @@ async def list_projects():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 2. YENİ PROJE EKLE
-@router.post("/add-project")
+@router.post("/add")
 async def create_project(project: ProjectCreate):
+    """Yeni projeyi veritabanına kaydeder"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         sql = """INSERT INTO projects 
-                 (project_code, priority, customer, customer_group, subject, item_quantity, 
-                  deadline, deadline_time, proengineer, prostatus, annodate, tender_reference) 
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        values = (project.project_code, project.priority, project.customer, project.customer_group, 
-                  project.subject, project.item_quantity, project.deadline, project.deadline_time,
-                  project.proengineer, project.prostatus, project.annodate, project.tender_reference)
+                 (project_code, priority, customer_group, customer, subject, 
+                  item_quantity, deadline, proengineer, project_type) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        values = (project.project_code, project.priority, project.customer_groups,
+                  project.customer, project.subject, project.item_quantity, 
+                  project.deadline, project.proengineer, project.project_type)
+        
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
@@ -59,9 +90,9 @@ async def create_project(project: ProjectCreate):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 3. TEK BİR PROJEYİ GETİR (Edit Sayfası İçin)
 @router.get("/get/{item_id}")
-async def get_project(item_id: int):
+async def get_single_project(item_id: int):
+    """Düzenleme için tek bir projenin verisini getirir"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
@@ -75,22 +106,21 @@ async def get_project(item_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 4. MEVCUT PROJEYİ GÜNCELLE
 @router.post("/update/{item_id}")
 async def update_project(item_id: int, project: ProjectCreate):
+    """Mevcut projeyi günceller"""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        # SQL sorgusu tüm alanları kapsayacak şekilde genişletildi
         sql = """UPDATE projects SET 
-                 project_code=%s, priority=%s, customer=%s, customer_group=%s, 
-                 subject=%s, item_quantity=%s, deadline=%s, deadline_time=%s, 
-                 proengineer=%s, prostatus=%s, annodate=%s, tender_reference=%s 
-                 WHERE id=%s"""
-        values = (project.project_code, project.priority, project.customer, project.customer_group,
-                  project.subject, project.item_quantity, project.deadline, project.deadline_time,
-                  project.proengineer, project.prostatus, project.annodate, project.tender_reference,
-                  item_id)
+                 project_code=%s, priority=%s, customer_group=%s, customer=%s, 
+                 subject=%s, item_quantity=%s, deadline=%s, proengineer=%s, 
+                 project_type=%s WHERE id=%s"""
+        
+        values = (project.project_code, project.priority, project.customer_groups,
+                  project.customer, project.subject, project.item_quantity, 
+                  project.deadline, project.proengineer, project.project_type, item_id)
+        
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
