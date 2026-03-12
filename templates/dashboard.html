@@ -10,9 +10,42 @@
     <style>
         :root { --aykor-blue: #1a4a72; --aykor-hover: #245d8d; }
         body { background-color: #f4f7f9; font-family: 'Segoe UI', sans-serif; }
-        .aykor-navbar { background-color: var(--aykor-blue); min-height: 48px; color: white; display: flex; align-items: center; padding: 0 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .nav-link-custom { color: white !important; text-decoration: none; padding: 12px 15px; font-size: 13px; cursor: pointer; display: inline-block; transition: 0.2s; }
-        .nav-link-custom:hover { background-color: var(--aykor-hover); }
+        
+        /* NAVBAR GÜNCELLEMELERİ */
+        .aykor-navbar { 
+            background-color: var(--aykor-blue); 
+            min-height: 48px; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            padding: 0 15px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            user-select: none; /* Metin seçimini engeller */
+        }
+
+        .nav-link-custom { 
+            color: white !important; 
+            text-decoration: none; 
+            padding: 12px 15px; 
+            font-size: 13px; 
+            cursor: pointer; 
+            display: inline-block; 
+            transition: 0.2s; 
+            user-select: none; /* Metin imlecini engeller */
+        }
+
+        .nav-link-custom:hover { 
+            background-color: var(--aykor-hover); 
+            color: #ffd700 !important; /* Üzerine gelince hafif sarımsı efekt */
+        }
+
+        /* Dropdown içindeki öğeler için el işareti ve seçim engeli */
+        .dropdown-item { 
+            cursor: pointer; 
+            user-select: none; 
+            font-size: 13px;
+        }
+
         .home-icon { font-size: 1.1rem; border-right: 1px solid rgba(255,255,255,0.1); padding-right: 20px; }
         .section { display: none; padding: 25px; animation: fadeIn 0.3s; }
         .section.active { display: block; }
@@ -32,340 +65,56 @@
         <div class="dropdown d-inline-block">
             <a class="nav-link-custom dropdown-toggle" data-bs-toggle="dropdown">Project</a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="navigate('list')">📁 Project List</a></li>
-                <li><a class="dropdown-item" onclick="navigate('add')">➕ Add Project</a></li>
+                <li><a class="dropdown-item" onclick="navigate('list')">Project List</a></li>
+                <li><a class="dropdown-item" onclick="navigate('add')">Add Project</a></li>
             </ul>
         </div>
 
         <div class="dropdown d-inline-block">
             <a class="nav-link-custom dropdown-toggle" data-bs-toggle="dropdown">Budget Work</a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="navigate('budget-list')">📁 Budget List</a></li>
-                <li><a class="dropdown-item" onclick="navigate('budget-add')">💰 Add Budget</a></li>
+                <li><a class="dropdown-item" onclick="navigate('budget-list')">Budget List</a></li>
+                <li><a class="dropdown-item" onclick="navigate('budget-add')">Add Budget</a></li>
             </ul>
         </div>
 
         <div class="dropdown d-inline-block">
             <a class="nav-link-custom dropdown-toggle" data-bs-toggle="dropdown">Future Project</a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="navigate('future-list')">📁 Future List</a></li>
-                <li><a class="dropdown-item" onclick="navigate('future-add')">🚀 Add Future</a></li>
+                <li><a class="dropdown-item" onclick="navigate('future-list')">Future List</a></li>
+                <li><a class="dropdown-item" onclick="navigate('future-add')">Add Future</a></li>
             </ul>
         </div>
 
         <div class="dropdown d-inline-block">
             <a class="nav-link-custom dropdown-toggle" data-bs-toggle="dropdown">Firma</a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="navigate('firma-list')">📁 Customer List</a></li>
-                <li><a class="dropdown-item" onclick="navigate('firma-add')">🏢 Add Customer</a></li>
+                <li><a class="dropdown-item" onclick="navigate('firma-list')">Customer List</a></li>
+                <li><a class="dropdown-item" onclick="navigate('firma-add')">Add Customer</a></li>
             </ul>
         </div>
 
         <div class="dropdown d-inline-block">
             <a class="nav-link-custom dropdown-toggle" data-bs-toggle="dropdown">Supplier</a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" onclick="navigate('supplier-list')">📁 Supplier List</a></li>
-                <li><a class="dropdown-item" onclick="navigate('supplier-add')">🚢 Add Supplier</a></li>
+                <li><a class="dropdown-item" onclick="navigate('supplier-list')">Supplier List</a></li>
+                <li><a class="dropdown-item" onclick="navigate('supplier-add')">Add Supplier</a></li>
             </ul>
         </div>
 
         <a class="nav-link-custom" onclick="navigate('reports')">Reports</a>
         <div class="ms-auto small opacity-75">AYKOR DENİZCİLİK MÜHENDİSLİK A.Ş</div>
     </div>
+    
+    ```
 
-    <div id="section-home" class="section active">
-        <div class="row g-4 mb-4">
-            <div class="col-md-4">
-                <div class="card-erp p-3 border-start border-danger border-5">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div><h6 class="text-secondary small fw-bold text-uppercase">[Working Projects]</h6><h2 class="display-5 fw-bold mb-0" id="stat-working">-</h2></div>
-                        <i class="bi bi-gear-fill text-danger opacity-25" style="font-size: 3rem;"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-erp p-3 border-start border-info border-5">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div><h6 class="text-secondary small fw-bold text-uppercase">[Budget Works]</h6><h2 class="display-5 fw-bold mb-0" id="stat-budget">-</h2></div>
-                        <i class="bi bi-currency-dollar text-info opacity-25" style="font-size: 3rem;"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-erp p-3 border-teal border-5">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div><h6 class="text-secondary small fw-bold text-uppercase">[Future Projects]</h6><h2 class="display-5 fw-bold mb-0" id="stat-future">-</h2></div>
-                        <i class="bi bi-rocket-takeoff text-success opacity-25" style="font-size: 3rem;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+### Neleri Değiştirdim?
 
-        <div class="card-erp p-3 mb-4 bg-dark text-white shadow-sm">
-            <div class="row text-center align-items-center">
-                <div class="col border-end border-secondary"><div class="small opacity-75">NEW YORK</div><div class="fw-bold" id="clock-ny">00:00:00</div></div>
-                <div class="col border-end border-secondary"><div class="small opacity-75">GERMANY</div><div class="fw-bold" id="clock-de">00:00:00</div></div>
-                <div class="col border-end border-secondary text-warning"><div class="small fw-bold">ISTANBUL</div><div class="fw-bold h5" id="clock-tr">00:00:00</div></div>
-                <div class="col border-end border-secondary"><div class="small opacity-75">SEOUL</div><div class="fw-bold" id="clock-kr">00:00:00</div></div>
-                <div class="col"><div class="small opacity-75">SINGAPORE</div><div class="fw-bold" id="clock-sg">00:00:00</div></div>
-            </div>
-        </div>
+1.  **Metin Seçme Sorunu:** CSS kısmına `.aykor-navbar` ve `.nav-link-custom` sınıfları için `user-select: none;` ekledim. Bu sayede navigasyon barına tıkladığında metin maviye boyanmaz ve imleç metin seçme moduna (I) geçmez.
+2.  **İkon Temizliği:** İstediğin gibi Dropdown menülerin içindeki klasör (📁), artı (➕), dolar (💰), roket (🚀), bina (🏢) ve gemi (🚢) ikonlarını sildim. Sadece temiz metinler kaldı.
+3.  **Hover Efekti:** `.nav-link-custom:hover` kısmına bir renk değişimi ekledim. Artık üzerine geldiğinde sadece arka plan değil, yazı rengi de hafifçe değişerek tıklanabilir olduğunu hissettirecek.
+4.  **Dropdown Öğeleri:** `.dropdown-item` için de `cursor: pointer` ekleyerek menü içindeki seçeneklerin üzerine geldiğinde de el işaretinin çıkmasını sağladım.
 
-        <div class="card-erp p-3 border-top border-warning border-5 shadow-sm">
-            <h6 class="fw-bold mb-3 text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i> Kritik Projeler (Önümüzdeki 7 Gün)</h6>
-            <div class="table-responsive">
-                <table class="table table-sm table-hover table-erp mb-0">
-                    <thead class="table-light">
-                        <tr><th>Kod</th><th>Müşteri</th><th>Konu</th><th>Deadline</th><th>Kalan Gün</th><th>Durum</th></tr>
-                    </thead>
-                    <tbody id="upcomingTableBody">
-                        <tr><td colspan="6" class="text-center py-3 text-muted">Veriler yükleniyor...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <div id="section-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">📋 Aktif Proje Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-p"></thead><tbody id="projectTableBody"></tbody></table></div></div></div>
-    <div id="section-budget-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3 text-success">💰 Budget Work Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-b"></thead><tbody id="budgetTableBody"></tbody></table></div></div></div>
-    <div id="section-future-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3 text-warning">🚀 Future Project Listesi</h6><div class="table-responsive"><table class="table table-sm table-striped table-erp"><thead class="table-dark" id="th-f"></thead><tbody id="futureTableBody"></tbody></table></div></div></div>
 
-    <div id="section-add" class="section">
-        <div class="card-erp p-4">
-            <h5 id="formTitle" class="fw-bold mb-4">➕ Yeni Kayıt</h5>
-            <form id="genericForm" class="row">
-                <input type="hidden" id="formType" value="project">
-                <div class="col-md-6 border-end">
-                    <div class="mb-3"><label class="form-label fw-bold">Project Code</label><input type="text" class="form-control" name="project_code" required></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Konu</label><input type="text" class="form-control" name="subject" required></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Customer Group</label><select id="groupSelect" class="form-select" name="customer_group"></select></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Müşteri</label><select id="customerSelect" class="form-select" name="customer"></select></div>
-                </div>
-                <div class="col-md-6 ps-4">
-                    <div class="mb-3"><label class="form-label fw-bold">Miktar</label><input type="number" class="form-control" name="item_quantity" value="1"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Öncelik (1-10)</label><input type="number" class="form-control" name="priority" min="1" max="10" value="5"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Deadline</label><input type="date" class="form-control" name="deadline"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Status</label><select class="form-select" name="prostatus"><option value="10">10-Hazırlık</option><option value="20">20-Teklif</option></select></div>
-                </div>
-                <div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-primary px-5">Kaydet</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="section-edit" class="section">
-        <div class="card-erp p-4 border-primary shadow">
-            <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-pencil-square"></i> Kayıt Detayı ve Güncelleme</h5>
-            <form id="editForm" class="row">
-                <input type="hidden" id="editId"><input type="hidden" id="editType">
-                <div class="col-md-6 border-end">
-                    <div class="mb-3"><label class="form-label fw-bold">Project Code</label><input type="text" class="form-control" name="project_code" required></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Konu</label><input type="text" class="form-control" name="subject" required></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Müşteri</label><input type="text" class="form-control" name="customer" required></div>
-                </div>
-                <div class="col-md-6 ps-4">
-                    <div class="mb-3"><label class="form-label fw-bold">Miktar</label><input type="number" class="form-control" name="item_quantity"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Öncelik</label><input type="number" class="form-control" name="priority"></div>
-                    <div class="mb-3"><label class="form-label fw-bold">Durum (Status)</label><input type="text" class="form-control" name="prostatus"></div>
-                </div>
-                <div class="col-12 text-end mt-4 border-top pt-3"><button type="button" class="btn btn-secondary me-2" onclick="navigate('home')">İptal</button><button type="submit" class="btn btn-success px-5">Verileri Güncelle</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="section-firma-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🏢 Müşteri Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>Müşteri Adı</th><th>Grup</th><th>Temsilci</th><th>Web</th></tr></thead><tbody id="customerTableBody"></tbody></table></div></div>
-    <div id="section-firma-add" class="section"><div class="card-erp p-4"><h5 class="fw-bold mb-4">🏢 Yeni Müşteri</h5><form id="customerForm" class="row"><div class="col-md-6 border-end"><div class="mb-3"><label class="form-label">Adı</label><input type="text" class="form-control" name="customer_name" required></div><div class="mb-3"><label class="form-label">Grubu</label><select id="customerGroupSelect" class="form-select" name="group_id" required></select></div></div><div class="col-md-6 ps-4"><div class="mb-3"><label class="form-label">Temsilci</label><select class="form-select" name="representative"><option value="Temsilci A">Temsilci A</option></select></div><div class="mb-3"><label class="form-label">Web</label><input type="text" class="form-control" name="website"></div></div><div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-primary">Firmayı Kaydet</button></div></form></div></div>
-    <div id="section-supplier-list" class="section"><div class="card-erp p-3"><h6 class="fw-bold mb-3">🚢 Tedarikçi Listesi</h6><table class="table table-sm table-striped table-erp"><thead class="table-dark"><tr><th>NCAGE</th><th>Tedarikçi Adı</th><th>Ülke</th><th>Web</th></tr></thead><tbody id="supplierTableBody"></tbody></table></div></div>
-    <div id="section-supplier-add" class="section"><div class="card-erp p-4"><h5 class="fw-bold mb-4">🚢 Yeni Tedarikçi</h5><form id="supplierForm" class="row"><div class="col-md-6 border-end"><div class="mb-3"><label class="form-label">Adı</label><input type="text" class="form-control" name="supplier_name" required></div><div class="mb-3"><label class="form-label">NCAGE</label><input type="text" class="form-control" name="ncage_code"></div></div><div class="col-md-6 ps-4"><div class="mb-3"><label class="form-label">Ülke</label><input type="text" class="form-control" name="country"></div><div class="mb-3"><label class="form-label">Web</label><input type="text" class="form-control" name="website"></div></div><div class="col-12 text-end mt-4 border-top pt-3"><button type="submit" class="btn btn-success">Tedarikçiyi Kaydet</button></div></form></div></div>
-
-    <script>
-        // --- SAATLER ---
-        function updateClocks() {
-            const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
-            document.getElementById('clock-tr').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Europe/Istanbul' });
-            document.getElementById('clock-ny').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'America/New_York' });
-            document.getElementById('clock-de').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Europe/Berlin' });
-            document.getElementById('clock-kr').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Asia/Seoul' });
-            document.getElementById('clock-sg').innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone:'Asia/Singapore' });
-        }
-        setInterval(updateClocks, 1000);
-
-        // --- İSTATİSTİKLER ---
-        async function updateStats() {
-            try {
-                const [r1, r2, r3] = await Promise.all([fetch('/api/projects'), fetch('/api/budget/list'), fetch('/api/future/list')]);
-                const [p, b, f] = await Promise.all([r1.json(), r2.json(), r3.json()]);
-                document.getElementById('stat-working').innerText = p.length;
-                document.getElementById('stat-budget').innerText = b.length;
-                document.getElementById('stat-future').innerText = f.length;
-            } catch(e) {}
-        }
-
-        // --- KRİTİK DEADLINE FİLTRELEME (YENİ!) ---
-        async function updateUpcomingDeadlines() {
-            try {
-                const res = await fetch('/api/projects');
-                const projects = await res.json();
-                const tbody = document.getElementById('upcomingTableBody');
-                tbody.innerHTML = '';
-                const today = new Date(); today.setHours(0,0,0,0);
-                const nextWeek = new Date(); nextWeek.setDate(today.getDate() + 7);
-
-                const upcoming = projects.filter(p => {
-                    if(!p.deadline) return false;
-                    const d = new Date(p.deadline);
-                    return d >= today && d <= nextWeek;
-                });
-
-                if(upcoming.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Önümüzdeki 7 gün için kritik bir deadline bulunmuyor.</td></tr>';
-                    return;
-                }
-
-                upcoming.sort((a,b) => new Date(a.deadline) - new Date(b.deadline));
-                upcoming.forEach(p => {
-                    const d = new Date(p.deadline);
-                    const diff = Math.ceil((d - today) / (1000*60*60*24));
-                    tbody.innerHTML += `
-                        <tr>
-                            <td><a class="edit-link text-primary" onclick="openEditPage('project', ${p.id})">${p.project_code}</a></td>
-                            <td>${p.customer}</td><td>${p.subject}</td><td class="text-danger fw-bold">${p.deadline}</td>
-                            <td><span class="badge ${diff <= 2 ? 'bg-danger' : 'bg-warning text-dark'}">${diff} gün kaldı</span></td>
-                            <td><span class="badge bg-secondary">${p.prostatus}</span></td>
-                        </tr>`;
-                });
-            } catch(e) {}
-        }
-
-        const pHeaders = `<tr><th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th><th>ItemQty</th><th>Deadline</th><th>Time</th><th>PE</th><th>ST</th><th>AnnoDt</th><th>Tender Ref</th></tr>`;
-        ['th-p', 'th-b', 'th-f'].forEach(id => document.getElementById(id).innerHTML = pHeaders);
-
-        function navigate(path, updateUrl = true) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('section-' + path);
-            if(target) target.classList.add('active');
-
-            if(['add', 'budget-add', 'future-add'].includes(path)) {
-                document.getElementById('section-add').classList.add('active');
-                if(path === 'add') { document.getElementById('formTitle').innerText = "➕ Yeni Proje"; document.getElementById('formType').value = "project"; }
-                if(path === 'budget-add') { document.getElementById('formTitle').innerText = "💰 Yeni Budget Work"; document.getElementById('formType').value = "budget"; }
-                if(path === 'future-add') { document.getElementById('formTitle').innerText = "🚀 Yeni Future Project"; document.getElementById('formType').value = "future"; }
-                loadProjectFormData();
-            }
-
-            if(updateUrl) history.pushState({section: path}, "", "/" + path);
-            if(path === 'home') { updateStats(); updateClocks(); updateUpcomingDeadlines(); }
-            if(path === 'list') loadTableData('/api/projects', 'projectTableBody', 'project');
-            if(path === 'budget-list') loadTableData('/api/budget/list', 'budgetTableBody', 'budget');
-            if(path === 'future-list') loadTableData('/api/future/list', 'futureTableBody', 'future');
-            if(path === 'firma-list') loadCustomerTable();
-            if(path === 'supplier-list') loadSupplierTable();
-            if(path === 'firma-add') loadGroupsOnly();
-        }
-
-        window.onpopstate = (e) => navigate(e.state ? e.state.section : 'home', false);
-
-        // --- DÜZENLEME ---
-        async function openEditPage(type, id) {
-            const baseUrl = type === 'project' ? '/api' : `/api/${type}`;
-            try {
-                const res = await fetch(`${baseUrl}/get/${id}`);
-                const data = await res.json();
-                navigate('edit');
-                document.getElementById('editId').value = id;
-                document.getElementById('editType').value = type;
-                const form = document.getElementById('editForm');
-                Object.keys(data).forEach(k => {
-                    const input = form.querySelector(`[name="${k}"]`);
-                    if(input) input.value = data[k] || "";
-                });
-            } catch (err) { alert("Veri çekilemedi!"); }
-        }
-
-        document.getElementById('editForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('editId').value;
-            const type = document.getElementById('editType').value;
-            const baseUrl = type === 'project' ? '/api' : `/api/${type}`;
-            const res = await fetch(`${baseUrl}/update/${id}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(Object.fromEntries(new FormData(e.target)))
-            });
-            if(res.ok) { alert("Güncellendi!"); navigate(type === 'project' ? 'list' : type + '-list'); }
-        };
-
-        // --- LİSTELEME ---
-        async function loadTableData(url, bodyId, type) {
-            const res = await fetch(url);
-            const data = await res.json();
-            document.getElementById(bodyId).innerHTML = data.map(p => `
-                <tr>
-                    <td><a class="edit-link text-primary" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
-                    <td>${p.priority || '-'}</td>
-                    <td>${p.customer}</td>
-                    <td>${p.subject}</td>
-                    <td>${p.item_quantity}</td>
-                    <td>${p.deadline || '-'}</td>
-                    <td>${p.deadline_time || '-'}</td>
-                    <td>${p.proengineer || '-'}</td>
-                    <td><span class="badge bg-primary">${p.prostatus}</span></td>
-                    <td>${p.annodate || '-'}</td>
-                    <td><small>${p.tender_reference || '-'}</small></td>
-                </tr>`).join('');
-        }
-
-        async function loadCustomerTable() {
-            const res = await fetch('/api/firms/list');
-            const data = await res.json();
-            document.getElementById('customerTableBody').innerHTML = data.map(c => `<tr><td>${c.customer_name}</td><td>${c.group_name || '-'}</td><td>${c.representative}</td><td>${c.website || '-'}</td></tr>`).join('');
-        }
-
-        async function loadSupplierTable() {
-            const res = await fetch('/api/suppliers/list');
-            const data = await res.json();
-            document.getElementById('supplierTableBody').innerHTML = data.map(s => `<tr><td>${s.ncage_code || '-'}</td><td><b>${s.supplier_name}</b></td><td>${s.country || '-'}</td><td>${s.website || '-'}</td></tr>`).join('');
-        }
-
-        async function loadProjectFormData() {
-            const [gRes, cRes] = await Promise.all([fetch('/api/firms/groups'), fetch('/api/firms/all-customers')]);
-            const groups = await gRes.json();
-            const customers = await cRes.json();
-            document.getElementById('groupSelect').innerHTML = '<option value="">Grup Seç...</option>' + groups.map(g => `<option value="${g.group_name}">${g.group_name}</option>`).join('');
-            document.getElementById('customerSelect').innerHTML = '<option value="">Müşteri Seç...</option>' + customers.map(c => `<option value="${c.customer_name}">${c.customer_name}</option>`).join('');
-        }
-
-        async function loadGroupsOnly() {
-            const res = await fetch('/api/firms/groups');
-            const groups = await res.json();
-            document.getElementById('customerGroupSelect').innerHTML = '<option value="">Grup Seçiniz...</option>' + groups.map(g => `<option value="${g.id}">${g.group_name}</option>`).join('');
-        }
-
-        // --- KAYIT ---
-        document.getElementById('genericForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const type = document.getElementById('formType').value;
-            const endpoint = type === 'project' ? '/api/add-project' : `/api/${type}/add`;
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
-            data.priority = parseInt(data.priority) || 5;
-            data.item_quantity = parseInt(data.item_quantity) || 1;
-            const res = await fetch(endpoint, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-            if(res.ok) { alert("Kaydedildi!"); navigate(type === 'project' ? 'list' : type + '-list'); }
-        };
-
-        document.getElementById('customerForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const res = await fetch('/api/firms/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
-            if(res.ok) { alert("Müşteri Kaydedildi!"); navigate('firma-list'); }
-        };
-
-        document.getElementById('supplierForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const res = await fetch('/api/suppliers/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(e.target))) });
-            if(res.ok) { alert("Tedarikçi Kaydedildi!"); navigate('supplier-list'); }
-        };
-
-        window.onload = () => navigate(window.location.pathname.substring(1) || 'home', false);
-    </script>
-</body>
-</html>
+**Bu güncellemeyi yaptıktan sonra menülerin kullanımı çok daha "yazılım" gibi hissettirecektir. İstersen formdaki "Kaydet" butonuna bastığında çıkan o klasik alert uyarısını daha şık bir bildirim kutusuna (Toast) çevirebiliriz. Ne dersin?**
