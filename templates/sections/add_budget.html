@@ -1,1 +1,60 @@
-
+<div id="section-budget-add" class="section">
+    <div class="card-erp p-4">
+        <h5 id="formTitleBudget" class="fw-bold mb-4">Add Budget Work</h5>
+        <form id="budgetForm" class="row">
+            <input type="hidden" id="formType" value="budget">
+            
+            <div class="col-md-6 border-end">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Budget No</label>
+                    <input type="text" class="form-control" name="project_code" required placeholder="Örn: B-2024-001">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Konu (Subject)</label>
+                    <input type="text" class="form-control" name="subject" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Customer Group</label>
+                    <select id="groupSelectBudget" class="form-select" name="customer_groups" required>
+                        </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Customer</label>
+                    <select id="customerSelectBudget" class="form-select" name="customer" required>
+                        </select>
+                </div>
+            </div>
+            
+            <div class="col-md-6 ps-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Miktar (Qty)</label>
+                    <input type="number" class="form-control" name="item_quantity" value="1">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Priority (1-10)</label>
+                    <input type="number" class="form-control" name="priority" min="1" max="10" value="5">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Deadline</label>
+                    <input type="date" class="form-control" name="deadline">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">PE (Project Engineer)</label>
+                    <select id="engineerSelectBudget" class="form-select" name="proengineer" required>
+                        </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Project Type</label>
+                    <select class="form-select" name="project_type" required>
+                        <option value="System">System</option>
+                        <option value="Spare Part">Spare Part</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-12 text-end mt-4 border-top pt-3">
+                <button type="submit" class="btn btn-info px-5 text-white fw-bold">Save Budget</button>
+            </div>
+        </form>
+    </div>
+</div>
