@@ -1,1 +1,36 @@
-
+<div id="section-firma-add" class="section">
+    <div class="card-erp p-4">
+        <h5 class="fw-bold mb-4">Add Customer</h5>
+        <form id="customerForm" class="row">
+            <div class="col-md-6 border-end">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Customer Name</label>
+                    <input type="text" class="form-control" name="customer_name" required placeholder="Firma adını giriniz">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Customer Group</label>
+                    <select id="customerGroupSelect" class="form-select" name="group_id" required>
+                        </select>
+                </div>
+            </div>
+            
+            <div class="col-md-6 ps-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Representative</label>
+                    <select class="form-select" name="representative">
+                        <option value="Temsilci A">Temsilci A</option>
+                        <option value="Temsilci B">Temsilci B</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Website</label>
+                    <input type="text" class="form-control" name="website" placeholder="www.firmaadresi.com">
+                </div>
+            </div>
+            
+            <div class="col-12 text-end mt-4 border-top pt-3">
+                <button type="submit" class="btn btn-primary px-5">Save Customer</button>
+            </div>
+        </form>
+    </div>
+</div>
