@@ -1,1 +1,60 @@
-
+<div id="section-add" class="section">
+    <div class="card-erp p-4">
+        <h5 id="formTitle" class="fw-bold mb-4">Add Project</h5>
+        <form id="genericForm" class="row">
+            <input type="hidden" id="formType" value="project">
+            
+            <div class="col-md-6 border-end">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Project No</label>
+                    <input type="text" class="form-control" name="project_code" required placeholder="Örn: 2024-001">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Konu (Subject)</label>
+                    <input type="text" class="form-control" name="subject" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Customer Group</label>
+                    <select id="groupSelect" class="form-select" name="customer_groups" required>
+                        </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Customer</label>
+                    <select id="customerSelect" class="form-select" name="customer" required>
+                        </select>
+                </div>
+            </div>
+            
+            <div class="col-md-6 ps-4">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Miktar (Qty)</label>
+                    <input type="number" class="form-control" name="item_quantity" value="1">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Priority (1-10)</label>
+                    <input type="number" class="form-control" name="priority" min="1" max="10" value="5">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Deadline</label>
+                    <input type="date" class="form-control" name="deadline">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">PE (Project Engineer)</label>
+                    <select id="engineerSelect" class="form-select" name="proengineer" required>
+                        </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Project Type</label>
+                    <select class="form-select" name="project_type" required>
+                        <option value="System">System</option>
+                        <option value="Spare Part">Spare Part</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-12 text-end mt-4 border-top pt-3">
+                <button type="submit" class="btn btn-primary px-5">Save Project</button>
+            </div>
+        </form>
+    </div>
+</div>
