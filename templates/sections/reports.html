@@ -1,1 +1,40 @@
+<div id="section-reports" class="section">
+    <div class="row g-4">
+        <div class="col-md-12">
+            <div class="card-erp p-4 border-start border-primary border-5">
+                <h5 class="fw-bold mb-4">Project Reports</h5>
+                <p class="text-muted small">Sistemdeki tüm projelerin genel durumunu, mühendis bazlı dağılımını ve deadline analizlerini buradan yönetebilirsiniz.</p>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100 text-start p-3" onclick="generateReport('general')">
+                            <div class="fw-bold">General Status Report</div>
+                            <div class="small opacity-75">Tüm aktif projelerin özeti</div>
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100 text-start p-3" onclick="generateReport('engineer')">
+                            <div class="fw-bold">Engineer Workload</div>
+                            <div class="small opacity-75">Personel bazlı iş yükü dağılımı</div>
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-outline-primary w-100 text-start p-3" onclick="generateReport('deadline')">
+                            <div class="fw-bold">Delayed Projects</div>
+                            <div class="small opacity-75">Geciken ve kritik projeler listesi</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-12">
+            <div class="card-erp p-3">
+                <h6 class="fw-bold mb-3">Report Preview</h6>
+                <div id="reportPreviewArea" class="p-5 text-center text-muted border border-dashed rounded">
+                    Henüz bir rapor oluşturulmadı. Yukarıdaki seçeneklerden birini seçiniz.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
