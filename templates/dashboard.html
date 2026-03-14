@@ -22,7 +22,6 @@
         .table-erp { font-size: 11px; }
         .edit-link { text-decoration: none; color: #0d6efd; font-weight: bold; cursor: pointer; }
         .edit-link:hover { text-decoration: underline; }
-        .border-teal { border-left: 5px solid #2a9d8f !important; }
     </style>
 </head>
 <body>
@@ -91,123 +90,55 @@
     </main>
 
     <script>
-        // --- SAATLER ---
-        function updateClocks() {
-            const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
-            const clocks = {
-                'clock-tr': 'Europe/Istanbul',
-                'clock-ny': 'America/New_York',
-                'clock-de': 'Europe/Berlin',
-                'clock-kr': 'Asia/Seoul',
-                'clock-sg': 'Asia/Singapore'
-            };
-            for (const [id, tz] of Object.entries(clocks)) {
-                const el = document.getElementById(id);
-                if(el) el.innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone: tz });
+        /**
+         * ANA NAVİGASYON (ROUTER)
+         * Bu fonksiyon sadece sayfalar arası geçişi yönetir ve 
+         * ilgili sayfanın 'init' fonksiyonunu uyandırır.
+         */
+        function navigate(path, updateUrl = true) {
+            // 1. Tüm bölümleri gizle
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // 2. Hedef bölümü göster
+            const target = document.getElementById('section-' + path);
+            if(target) {
+                target.classList.add('active');
+            }
+
+            // 3. Tarayıcı geçmişini güncelle (URL'de /home, /list gibi görünmesi için)
+            if(updateUrl) {
+                history.pushState({section: path}, "", "/" + path);
+            }
+
+            // 4. MODÜLER TETİKLEYİCİLER
+            // Her sayfa kendi init fonksiyonuna sahip. Dashboard sadece "başla" emri veriyor.
+            try {
+                if(path === 'home' && typeof initHomeModule === 'function') initHomeModule();
+                if(path === 'list' && typeof initProjectListModule === 'function') initProjectListModule();
+                if(path === 'add' && typeof initAddProjectModule === 'function') initAddProjectModule();
+                if(path === 'budget-list' && typeof initBudgetListModule === 'function') initBudgetListModule();
+                if(path === 'budget-add' && typeof initAddBudgetModule === 'function') initAddBudgetModule();
+                if(path === 'future-list' && typeof initFutureListModule === 'function') initFutureListModule();
+                if(path === 'future-add' && typeof initAddFutureModule === 'function') initAddFutureModule();
+                if(path === 'firma-list' && typeof initCustomerListModule === 'function') initCustomerListModule();
+                if(path === 'firma-add' && typeof initAddCustomerModule === 'function') initAddCustomerModule();
+                if(path === 'supplier-list' && typeof initSupplierListModule === 'function') initSupplierListModule();
+                if(path === 'supplier-add' && typeof initAddSupplierModule === 'function') initAddSupplierModule();
+            } catch (err) {
+                console.warn(`Modül başlatılamadı (${path}):`, err);
             }
         }
-        setInterval(updateClocks, 1000);
 
-        // --- İSTATİSTİKLER ---
-        async function updateStats() {
-            try {
-                const [r1, r2, r3] = await Promise.all([fetch('/api/projects'), fetch('/api/budget/list'), fetch('/api/future/list')]);
-                const [p, b, f] = await Promise.all([r1.json(), r2.json(), r3.json()]);
-                if(document.getElementById('stat-working')) document.getElementById('stat-working').innerText = p.length;
-                if(document.getElementById('stat-budget')) document.getElementById('stat-budget').innerText = b.length;
-                if(document.getElementById('stat-future')) document.getElementById('stat-future').innerText = f.length;
-            } catch(e) {}
-        }
+        // Sayfa ilk yüklendiğinde veya geri tuşuna basıldığında doğru sayfayı aç
+        window.onload = () => {
+            const currentPath = window.location.pathname.substring(1) || 'home';
+            navigate(currentPath, false);
+        };
 
-        // --- NAVİGASYON ---
-        const pHeaders = `<tr><th>ProjectCode</th><th>Öncelik</th><th>Müşteri</th><th>Konu</th><th>ItemQty</th><th>Deadline</th><th>Time</th><th>PE</th><th>ST</th><th>AnnoDt</th><th>Tender Ref</th></tr>`;
-
-        function navigate(path, updateUrl = true) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('section-' + path);
-            if(target) target.classList.add('active');
-
-            if(updateUrl) history.pushState({section: path}, "", "/" + path);
-
-            // Sayfaya özel veri yüklemeleri
-            if(path === 'home') { updateStats(); updateClocks(); }
-            if(path === 'list') { document.getElementById('th-p').innerHTML = pHeaders; loadTableData('/api/projects', 'projectTableBody', 'project'); }
-            if(path === 'budget-list') { document.getElementById('th-b').innerHTML = pHeaders; loadTableData('/api/budget/list', 'budgetTableBody', 'budget'); }
-            if(path === 'future-list') { document.getElementById('th-f').innerHTML = pHeaders; loadTableData('/api/future/list', 'futureTableBody', 'future'); }
-            if(path === 'add' || path === 'budget-add' || path === 'future-add') loadProjectFormData();
-            if(path === 'firma-list') loadCustomerTable();
-            if(path === 'supplier-list') loadSupplierTable();
-            if(path === 'firma-add') loadGroupsOnly();
-        }
-
-        // --- VERİ YÜKLEME FONKSİYONLARI ---
-        async function loadTableData(url, bodyId, type) {
-            const res = await fetch(url);
-            const data = await res.json();
-            const tbody = document.getElementById(bodyId);
-            if(!tbody) return;
-            tbody.innerHTML = data.map(p => `
-                <tr>
-                    <td><a class="edit-link text-primary" onclick="openEditPage('${type}', ${p.id})">${p.project_code}</a></td>
-                    <td>${p.priority || '-'}</td>
-                    <td>${p.customer}</td>
-                    <td>${p.subject}</td>
-                    <td>${p.item_quantity}</td>
-                    <td>${p.deadline || '-'}</td>
-                    <td>${p.deadline_time || '-'}</td>
-                    <td>${p.proengineer || '-'}</td>
-                    <td><span class="badge bg-primary">${p.prostatus || 'Aktif'}</span></td>
-                    <td>${p.annodate || '-'}</td>
-                    <td><small>${p.tender_reference || '-'}</small></td>
-                </tr>`).join('');
-        }
-
-        async function loadProjectFormData() {
-            try {
-                const [gRes, cRes, eRes] = await Promise.all([
-                    fetch('/api/firms/groups'), fetch('/api/firms/all-customers'), fetch('/api/projects/get-dropdowns')
-                ]);
-                const groups = await gRes.json();
-                const customers = await cRes.json();
-                const dropdowns = await eRes.json();
-
-                const groupHtml = '<option value="">Grup Seç...</option>' + groups.map(g => `<option value="${g.group_name}">${g.group_name}</option>`).join('');
-                const customerHtml = '<option value="">Müşteri Seç...</option>' + customers.map(c => `<option value="${c.customer_name}">${c.customer_name}</option>`).join('');
-                const engineerHtml = '<option value="">Sorumlu Seç...</option>' + dropdowns.engineers.map(e => `<option value="${e}">${e}</option>`).join('');
-
-                // Tüm formlardaki selectleri doldur (Farklı ID'ler kullandığımız için)
-                ['groupSelect', 'groupSelectBudget', 'groupSelectFuture'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = groupHtml; });
-                ['customerSelect', 'customerSelectBudget', 'customerSelectFuture'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = customerHtml; });
-                ['engineerSelect', 'engineerSelectBudget', 'engineerSelectFuture'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = engineerHtml; });
-            } catch(e) {}
-        }
-
-        // Form Gönderme İşlemleri (Proje, Müşteri, Tedarikçi)
-        document.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formId = e.target.id;
-            let endpoint = '';
-            
-            if(formId === 'genericForm' || formId === 'budgetForm' || formId === 'futureForm') {
-                const type = e.target.querySelector('#formType').value;
-                endpoint = type === 'project' ? '/api/projects/add' : `/api/${type}/add`;
-            } else if(formId === 'customerForm') endpoint = '/api/firms/add';
-            else if(formId === 'supplierForm') endpoint = '/api/suppliers/add';
-
-            if(!endpoint) return;
-
-            const formData = Object.fromEntries(new FormData(e.target));
-            const res = await fetch(endpoint, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(formData)
-            });
-
-            if(res.ok) { alert("Başarıyla Kaydedildi!"); navigate('home'); }
-        });
-
-        window.onload = () => navigate(window.location.pathname.substring(1) || 'home', false);
-        window.onpopstate = (e) => navigate(e.state ? e.state.section : 'home', false);
+        window.onpopstate = (e) => {
+            const path = e.state ? e.state.section : 'home';
+            navigate(path, false);
+        };
     </script>
 </body>
 </html>
