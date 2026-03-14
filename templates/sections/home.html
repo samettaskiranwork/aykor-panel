@@ -46,7 +46,10 @@
     </div>
 
     <div class="card-erp p-3 border-top border-warning border-5 shadow-sm">
-        <h6 class="fw-bold mb-3 text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i> Kritik Projeler (Önümüzdeki 7 Gün)</h6>
+        <h6 class="fw-bold mb-3 text-danger">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> 
+            Kritik Projeler (Statü 10.x & Yaklaşan Deadline)
+        </h6>
         <div class="table-responsive">
             <table class="table table-sm table-hover table-erp mb-0">
                 <thead class="table-light">
@@ -56,13 +59,98 @@
                         <th>Konu</th>
                         <th>Deadline</th>
                         <th>Kalan Gün</th>
-                        <th>Durum</th>
+                        <th class="text-center">Statü</th>
                     </tr>
                 </thead>
-                <tbody id="upcomingTableBody">
-                    <tr><td colspan="6" class="text-center py-3 text-muted">Veriler yükleniyor...</td></tr>
+                <tbody id="homeUpcomingTableBody">
+                    <tr><td colspan="6" class="text-center py-4 text-muted">Kritik işler taranıyor...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+/**
+ * HOME MODÜLÜ MANTIĞI
+ * Bu script sadece bu sayfaya özeldir. Dashboard'daki navigate fonksiyonu 
+ * path 'home' olduğunda initHomeModule() fonksiyonunu çağırır.
+ */
+
+async function initHomeModule() {
+    console.log("Modül Tetiklendi: Home");
+    // Verileri eş zamanlı çekerek hızı artırıyoruz
+    await Promise.all([
+        updateHomeStats(),
+        updateHomeUpcomingTable()
+    ]);
+}
+
+// 1. İstatistikleri Veritabanından Çek
+async function updateHomeStats() {
+    try {
+        const [r1, r2, r3] = await Promise.all([
+            fetch('/api/projects'), 
+            fetch('/api/budget/list'), 
+            fetch('/api/future/list')
+        ]);
+        const [p, b, f] = await Promise.all([r1.json(), r2.json(), r3.json()]);
+        
+        document.getElementById('stat-working').innerText = p.length || 0;
+        document.getElementById('stat-budget').innerText = b.length || 0;
+        document.getElementById('stat-future').innerText = f.length || 0;
+    } catch(e) { console.error("Stats Error:", e); }
+}
+
+// 2. Kritik Projeleri (Status 10.x) Listele
+async function updateHomeUpcomingTable() {
+    try {
+        const res = await fetch('/api/projects/upcoming'); 
+        const projects = await res.json();
+        const tbody = document.getElementById('homeUpcomingTableBody');
+        
+        if (!tbody) return;
+
+        if (projects.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Önümüzdeki 7 gün için kriterlere uygun iş bulunamadı.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = projects.map(p => {
+            const diff = Math.ceil((new Date(p.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+            return `
+                <tr>
+                    <td><strong>${p.project_code}</strong></td>
+                    <td>${p.customer}</td>
+                    <td>${p.subject}</td>
+                    <td>${p.deadline}</td>
+                    <td><span class="badge ${diff <= 3 ? 'bg-danger' : 'bg-warning text-dark'}">${diff} Gün</span></td>
+                    <td class="text-center"><small class="badge bg-light text-dark border">${p.prostatus}</small></td>
+                </tr>
+            `;
+        }).join('');
+    } catch(e) { console.error("Upcoming Table Error:", e); }
+}
+
+// 3. Saatleri Güncelle (Bu fonksiyon bir kez tanımlanır ve her zaman çalışır)
+function runHomeClocks() {
+    const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+    const clocks = {
+        'clock-tr': 'Europe/Istanbul',
+        'clock-ny': 'America/New_York',
+        'clock-de': 'Europe/Berlin',
+        'clock-kr': 'Asia/Seoul',
+        'clock-sg': 'Asia/Singapore'
+    };
+    for (const [id, tz] of Object.entries(clocks)) {
+        const el = document.getElementById(id);
+        if(el) el.innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone: tz });
+    }
+}
+
+// İlk açılışta saatleri başlat ve saniyede bir güncelle
+if (!window.homeClockInterval) {
+    runHomeClocks();
+    window.homeClockInterval = setInterval(runHomeClocks, 1000);
+}
+</script>
