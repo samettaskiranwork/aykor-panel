@@ -163,24 +163,41 @@
         }
 
         async function loadProjectFormData() {
-            try {
-                const [gRes, cRes, eRes] = await Promise.all([
-                    fetch('/api/firms/groups'), fetch('/api/firms/all-customers'), fetch('/api/projects/get-dropdowns')
-                ]);
-                const groups = await gRes.json();
-                const customers = await cRes.json();
-                const dropdowns = await eRes.json();
+    try {
+        // Backend'den verileri çekiyoruz
+        const [gRes, cRes, eRes] = await Promise.all([
+            fetch('/api/firms/groups'), 
+            fetch('/api/firms/all-customers'),
+            fetch('/api/projects/get-dropdowns')
+        ]);
+        
+        const groups = await gRes.json();
+        const customers = await cRes.json();
+        const dropdowns = await eRes.json();
 
-                const groupHtml = '<option value="">Grup Seç...</option>' + groups.map(g => `<option value="${g.group_name}">${g.group_name}</option>`).join('');
-                const customerHtml = '<option value="">Müşteri Seç...</option>' + customers.map(c => `<option value="${c.customer_name}">${c.customer_name}</option>`).join('');
-                const engineerHtml = '<option value="">Sorumlu Seç...</option>' + dropdowns.engineers.map(e => `<option value="${e}">${e}</option>`).join('');
+        // HTML şablonlarını hazırlıyoruz
+        const groupOptions = '<option value="">Grup Seç...</option>' + 
+            groups.map(g => `<option value="${g.group_name}">${g.group_name}</option>`).join('');
+            
+        const customerOptions = '<option value="">Müşteri Seç...</option>' + 
+            customers.map(c => `<option value="${c.customer_name}">${c.customer_name}</option>`).join('');
+            
+        const engineerOptions = '<option value="">Sorumlu Seç...</option>' + 
+            dropdowns.engineers.map(e => `<option value="${e}">${e}</option>`).join('');
 
-                // Tüm formlardaki selectleri doldur (Farklı ID'ler kullandığımız için)
-                ['groupSelect', 'groupSelectBudget', 'groupSelectFuture'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = groupHtml; });
-                ['customerSelect', 'customerSelectBudget', 'customerSelectFuture'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = customerHtml; });
-                ['engineerSelect', 'engineerSelectBudget', 'engineerSelectFuture'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = engineerHtml; });
-            } catch(e) {}
-        }
+        // IDsine göre kutuları dolduruyoruz (Kontrol ederek)
+        const elGroup = document.getElementById('groupSelect');
+        const elCust = document.getElementById('customerSelect');
+        const elEng = document.getElementById('engineerSelect');
+
+        if(elGroup) elGroup.innerHTML = groupOptions;
+        if(elCust) elCust.innerHTML = customerOptions;
+        if(elEng) elEng.innerHTML = engineerOptions;
+
+    } catch(e) {
+        console.error("Dropdown verileri yüklenirken hata oluştu:", e);
+    }
+}
 
         // Form Gönderme İşlemleri (Proje, Müşteri, Tedarikçi)
         document.addEventListener('submit', async (e) => {
