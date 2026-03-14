@@ -78,12 +78,37 @@
  */
 
 async function initHomeModule() {
-    console.log("Modül Tetiklendi: Home");
-    // Verileri eş zamanlı çekerek hızı artırıyoruz
-    await Promise.all([
-        updateHomeStats(),
-        updateHomeUpcomingTable()
-    ]);
+    try {
+        // Tek bir istek, tüm ana sayfa verisi!
+        const response = await fetch('/api/home/dashboard_data');
+        const data = await response.json();
+
+        // 1. İstatistikleri Yaz
+        document.getElementById('stat-working').innerText = data.stats.working;
+        document.getElementById('stat-budget').innerText = data.stats.budget;
+        document.getElementById('stat-future').innerText = data.stats.future;
+
+        // 2. Tabloyu Doldur
+        const tbody = document.getElementById('homeUpcomingTableBody');
+        if (data.upcoming_projects.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Kritik iş bulunamadı.</td></tr>';
+        } else {
+            tbody.innerHTML = data.upcoming_projects.map(p => {
+                const diff = Math.ceil((new Date(p.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+                return `
+                    <tr>
+                        <td><strong>${p.project_code}</strong></td>
+                        <td>${p.customer}</td>
+                        <td>${p.subject}</td>
+                        <td>${p.deadline}</td>
+                        <td><span class="badge ${diff <= 3 ? 'bg-danger' : 'bg-warning text-dark'}">${diff} Gün</span></td>
+                        <td class="text-center"><small class="badge bg-light text-dark border">${p.prostatus}</small></td>
+                    </tr>`;
+            }).join('');
+        }
+    } catch (err) {
+        console.error("Home Modülü hatası:", err);
+    }
 }
 
 // 1. İstatistikleri Veritabanından Çek
