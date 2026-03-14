@@ -1,3 +1,10 @@
+from fastapi import APIRouter, HTTPException # APIRouter'ı buraya ekledik
+from database import get_db_connection
+from datetime import datetime, timedelta
+
+# BU SATIR EKSİK VEYA AŞAĞIDA KALMIŞ:
+router = APIRouter(prefix="/api/home")
+
 @router.get("/dashboard_data")
 async def get_dashboard_data():
     try:
