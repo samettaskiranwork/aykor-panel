@@ -14,6 +14,7 @@ app.include_router(budget.router)
 app.include_router(future.router)
 app.include_router(firms.router)
 app.include_router(suppliers.router)
+app.include_router(home_api.router)
 app.include_router(auth.router) # Giriş modülü eklendi
 
 # 1. GİRİŞ SAYFASI (Adresi yazınca ilk bura açılır)
