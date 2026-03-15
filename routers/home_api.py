@@ -1,8 +1,7 @@
-from fastapi import APIRouter, HTTPException # APIRouter'ı buraya ekledik
+from fastapi import APIRouter, HTTPException
 from database import get_db_connection
 from datetime import datetime, timedelta
 
-# BU SATIR EKSİK VEYA AŞAĞIDA KALMIŞ:
 router = APIRouter(prefix="/api/home")
 
 @router.get("/dashboard_data")
@@ -11,17 +10,26 @@ async def get_dashboard_data():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         
-        # --- TARİH AYARLARI ---
+        # --- 1. ZAMAN AYARLARI ---
         today = datetime.now().date()
         next_week = today + timedelta(days=7)
-        
-        # SQL'e göndermeden önce metne çevirmek her zaman daha güvenlidir
-        today_str = today.strftime('%Y-%m-%d')
         next_week_str = next_week.strftime('%Y-%m-%d')
 
-        # --- KRİTİK PROJELER SORGUSU ---
-        # 1. CAST ile statüyü metne çeviriyoruz (Integer ise hata almamak için)
-        # 2. BETWEEN yerine <= kullanarak 'Gecikmiş' ama hala aktif işleri de dahil ediyoruz
+        # --- 2. İSTATİSTİK SAYILARI (GÜNCEL TABLOLAR) ---
+        # Aktif Projeler (Statü 10.x olanlar)
+        cursor.execute("SELECT COUNT(*) as count FROM projects WHERE CAST(prostatus AS CHAR) LIKE '10%'")
+        working_count = cursor.fetchone()['count']
+        
+        # Bütçe Projeleri (Tablo adını düzelttik)
+        cursor.execute("SELECT COUNT(*) as count FROM budget_projects")
+        budget_count = cursor.fetchone()['count']
+        
+        # Gelecek Projeler (Tablo adını düzelttik)
+        cursor.execute("SELECT COUNT(*) as count FROM future_projects")
+        future_count = cursor.fetchone()['count']
+
+        # --- 3. KRİTİK PROJELER SORGUSU ---
+        # Statüsü 10.x olan ve teslim tarihi 7 gün içinde olanlar
         query = """
             SELECT project_code, customer, subject, deadline, prostatus 
             FROM projects 
@@ -30,33 +38,25 @@ async def get_dashboard_data():
             AND deadline >= '2000-01-01'
             ORDER BY deadline ASC
         """
-        # Test amaçlı: Sadece önümüzdeki 7 günü değil, 
-        # statüsü 10 olup süresi dolmuş TÜM işleri getiriyoruz (Gerçekten kritikler bunlardır)
         cursor.execute(query, (next_week_str,))
         upcoming = cursor.fetchall()
 
-        # --- LOGLAMA (Terminalden kontrol etmen için) ---
-        print(f"Sorgu Tarihi: {next_week_str} tarihine kadar olanlar aranıyor.")
-        print(f"Bulunan Kayıt Sayısı: {len(upcoming)}")
-
-        # ... (İstatistik kısımları aynı kalabilir) ...
-        
-        cursor.execute("SELECT COUNT(*) as count FROM projects WHERE prostatus LIKE '10%'")
-        working_count = cursor.fetchone()['count']
-        
-        cursor.execute("SELECT COUNT(*) as count FROM budget")
-        budget_count = cursor.fetchone()['count']
-        
-        cursor.execute("SELECT COUNT(*) as count FROM future")
-        future_count = cursor.fetchone()['count']
+        # Terminal Raporu (Hata ayıklama için)
+        print(f"--- Dashboard Raporu ---")
+        print(f"Aktif: {working_count}, Bütçe: {budget_count}, Gelecek: {future_count}")
+        print(f"Kritik Liste: {len(upcoming)} adet bulundu.")
 
         cursor.close()
         conn.close()
 
         return {
-            "stats": {"working": working_count, "budget": budget_count, "future": future_count},
+            "stats": {
+                "working": working_count,
+                "budget": budget_count,
+                "future": future_count
+            },
             "upcoming_projects": upcoming
         }
     except Exception as e:
-        print(f"HATA OLUŞTU: {str(e)}") # Terminale hatayı yazdır
+        print(f"!!! HOME API HATASI: {str(e)}") # Hatanın ne olduğunu terminalde gör
         raise HTTPException(status_code=500, detail=str(e))
