@@ -1,7 +1,7 @@
+from routers import home_api
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from routers import home_api # En üste ekle
 from routers import projects, budget, future, firms, suppliers, auth # auth eklendi
 from typing import Optional
 
