@@ -16,6 +16,8 @@ app.include_router(future.router)
 app.include_router(firms.router)
 app.include_router(suppliers.router)
 app.include_router(home_api.router)
+app.include_router(project_list_api.router)
+app.include_router(add_project_api.router)
 app.include_router(auth.router) # Giriş modülü eklendi
 
 # 1. GİRİŞ SAYFASI (Adresi yazınca ilk bura açılır)
