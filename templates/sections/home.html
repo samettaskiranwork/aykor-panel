@@ -84,14 +84,14 @@ async function initHomeModule() {
                 const diff = Math.ceil((new Date(p.deadline) - new Date()) / (1000 * 60 * 60 * 24));
                 return `
                     <tr>
-                        <td><strong>${p.project_code}</strong></td>
-                        <td>${p.customer}</td>
-                        <td>${p.subject}</td>
-                        <td>${p.deadline}</td>
-                        <td><span class="badge ${diff <= 3 ? 'bg-danger' : 'bg-warning text-dark'}">${diff} Gün</span></td>
-                        <td class="text-center"><small class="badge bg-light text-dark border">${p.prostatus}</small></td>
-                    </tr>`;
-            }).join('');
+            <td><strong>${p.project_code}</strong></td>          <td>${p.customer}</td>                               <td>${p.subject}</td>                                <td>${p.tender_reference || '-'}</td>                <td>${p.item_quantity || 0}</td>                     <td>${p.deadline}</td>                               <td>${p.deadline_time || '-'}</td>                   <td>
+                <span class="badge ${diff <= 3 ? 'bg-danger' : 'bg-warning text-dark'}">
+                    ${diff} Gün
+                </span>
+            </td>                                                <td>${p.proengineer || '-'}</td>                     <td>${p.annodate || '-'}</td>                        <td class="text-center">
+                <small class="badge bg-light text-dark border">${p.prostatus}</small>
+            </td>                                                </tr>`;
+}).join('');
         }
     } catch (err) {
         console.error("Home Modülü Hatası:", err);
