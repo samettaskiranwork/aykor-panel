@@ -81,8 +81,11 @@ async function initHomeModule() {
             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Kriterlere uygun kritik iş bulunamadı.</td></tr>';
         } else {
             tbody.innerHTML = data.upcoming_projects.map(p => {
-                const diff = Math.ceil((new Date(p.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-                return `
+            // Tarihleri Türkiye formatına (GG-AA-YYYY) çeviren küçük sihirbazlar:
+            const d_tr = p.deadline ? p.deadline.split('-').reverse().join('-') : '-';
+            const a_tr = p.annodate ? p.annodate.split('-').reverse().join('-') : '-';
+
+            return `
                     <tr>
             <td><strong>${p.project_code}</strong></td>          <td>${p.customer}</td>                               <td>${p.subject}</td>                                <td>${p.tender_reference || '-'}</td>                <td>${p.item_quantity || 0}</td>                     <td>${p.deadline}</td>                               <td>${p.deadline_time || '-'}</td>                   <td>
                 <span class="badge ${diff <= 3 ? 'bg-danger' : 'bg-warning text-dark'}">
