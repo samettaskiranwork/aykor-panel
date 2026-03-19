@@ -34,7 +34,7 @@ async def get_dashboard_data():
     SELECT 
         project_code, customer, subject, tender_reference, 
         item_quantity, deadline, deadline_time, proengineer, 
-        annodate, prostatus 
+        annodate, prostatus, priority
     FROM projects 
     WHERE prostatus LIKE '10%' 
     AND deadline <= %s
