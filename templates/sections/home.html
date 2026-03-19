@@ -109,7 +109,7 @@ function runHomeClocks() {
         if(el) el.innerText = new Date().toLocaleTimeString('tr-TR', { ...opt, timeZone: tz });
     }
 }
-setInterval(runHomeClocks, 1000);
+setInterval(runHomeClocks, 30000);
 runHomeClocks();
 
 // TEST İÇİN: Sayfa yüklendiğinde otomatik çalıştır
