@@ -102,7 +102,7 @@ async function initHomeModule() {
 
 // Saatler (Bağımsız çalışır)
 function runHomeClocks() {
-    const opt = { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+    const opt = { hour:'2-digit', minute:'2-digit', hour12:false };
     const clocks = {'clock-tr':'Europe/Istanbul','clock-ny':'America/New_York','clock-de':'Europe/Berlin','clock-kr':'Asia/Seoul','clock-sg':'Asia/Singapore'};
     for (const [id, tz] of Object.entries(clocks)) {
         const el = document.getElementById(id);
