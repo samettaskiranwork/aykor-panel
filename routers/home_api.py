@@ -31,13 +31,15 @@ async def get_dashboard_data():
         # --- 3. KRİTİK PROJELER SORGUSU ---
         # Statüsü 10.x olan ve teslim tarihi 7 gün içinde olanlar
         query = """
-            SELECT project_code, customer, subject, deadline, prostatus 
-            FROM projects 
-            WHERE CAST(prostatus AS CHAR) LIKE '10%' 
-            AND deadline <= %s
-            AND deadline >= '2000-01-01'
-            ORDER BY deadline ASC
-        """
+    SELECT 
+        project_code, customer, subject, tender_reference, 
+        item_quantity, deadline, deadline_time, proengineer, 
+        annodate, prostatus 
+    FROM projects 
+    WHERE prostatus LIKE '10%' 
+    AND deadline <= %s
+    ORDER BY deadline ASC
+"""
         cursor.execute(query, (next_week_str,))
         upcoming = cursor.fetchall()
 
