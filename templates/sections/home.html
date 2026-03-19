@@ -63,7 +63,7 @@
 
 <script>
 async function initHomeModule() {
-    console.log("Home modülü başlatılıyor..."); // F12 konsolunda bunu görmelisin
+    console.log("Home modülü başlatılıyor...");
     try {
         const response = await fetch('/api/home/dashboard_data');
         if (!response.ok) throw new Error('Network response was not ok');
@@ -78,31 +78,29 @@ async function initHomeModule() {
 
         // 2. Tablo
         if (data.upcoming_projects.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Kriterlere uygun kritik iş bulunamadı.</td></tr>';
+            // Sütun sayısı 10 olduğu için colspan 10 yapıldı
+            tbody.innerHTML = '<tr><td colspan="10" class="text-center py-4 text-muted">Kriterlere uygun kritik iş bulunamadı.</td></tr>';
         } else {
             tbody.innerHTML = data.upcoming_projects.map(p => {
-            // Tarihleri Türkiye formatına (GG-AA-YYYY) çeviren küçük sihirbazlar:
-            const d_tr = p.deadline ? p.deadline.split('-').reverse().join('-') : '-';
-            const a_tr = p.annodate ? p.annodate.split('-').reverse().join('-') : '-';
+                // Tarihleri Türkiye formatına (GG-AA-YYYY) çeviren sihirbazlar
+                const d_tr = p.deadline ? p.deadline.split('-').reverse().join('-') : '-';
+                const a_tr = p.annodate ? p.annodate.split('-').reverse().join('-') : '-';
 
-            return `
+                return `
                     <tr>
-            <td><strong>${p.project_code}</strong></td>          <td>${p.customer}</td>                               <td>${p.subject}</td>                                <td>${p.tender_reference || '-'}</td>                <td>${p.item_quantity || 0}</td>                     <td>${p.deadline}</td>                               <td>${p.deadline_time || '-'}</td>                   <td>
-                <span class="badge ${diff <= 3 ? 'bg-danger' : 'bg-warning text-dark'}">
-                    ${diff} Gün
-                </span>
-            </td>                                                <td>${p.proengineer || '-'}</td>                     <td>${p.annodate || '-'}</td>                        <td class="text-center">
-                <small class="badge bg-light text-dark border">${p.prostatus}</small>
-            </td>                                                </tr>`;
-}).join('');
+                        <td><strong>${p.project_code}</strong></td>          <td>${p.customer}</td>                               <td>${p.tender_reference || '-'}</td>                <td>${p.subject}</td>                                <td>${p.item_quantity || 0}</td>                     <td>${d_tr}</td>                                     <td>${p.deadline_time || '-'}</td>                   <td>${p.proengineer || '-'}</td>                     <td>${a_tr}</td>                                     <td class="text-center">
+                            <small class="badge bg-light text-dark border">${p.prostatus}</small>
+                        </td>                                                </tr>`;
+            }).join('');
         }
     } catch (err) {
         console.error("Home Modülü Hatası:", err);
-        document.getElementById('homeUpcomingTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Veri yüklenemedi!</td></tr>';
+        // Hata durumunda da colspan 10 olmalı
+        document.getElementById('homeUpcomingTableBody').innerHTML = '<tr><td colspan="10" class="text-center text-danger">Veri yüklenemedi! Bir değişken veya API hatası olabilir.</td></tr>';
     }
 }
 
-// Saatler (Bağımsız çalışır)
+// Saatler ve Test Tetikleyicisi aşağıda aynı kalabilir...
 function runHomeClocks() {
     const opt = { hour:'2-digit', minute:'2-digit', hour12:false };
     const clocks = {'clock-tr':'Europe/Istanbul','clock-ny':'America/New_York','clock-de':'Europe/Berlin','clock-kr':'Asia/Seoul','clock-sg':'Asia/Singapore'};
@@ -113,8 +111,5 @@ function runHomeClocks() {
 }
 setInterval(runHomeClocks, 30000);
 runHomeClocks();
-
-// TEST İÇİN: Sayfa yüklendiğinde otomatik çalıştır
-// Normalde dashboard.html içindeki navigate('home') bunu tetiklemeli.
 initHomeModule(); 
 </script>
