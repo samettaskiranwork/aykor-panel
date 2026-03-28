@@ -1,0 +1,99 @@
+/* --- GENEL ERP BİLEŞENLERİ --- */
+.section-title {
+    border-left: 5px solid #1a4a72;
+    padding-left: 10px;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.table-erp td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+.row-overdue {
+    color: #b02a37;
+    font-weight: 600;
+}
+
+/* Tablo Resizer ve Filtreler her tabloda lazım olur */
+.resizer {
+    position: absolute;
+    right: 0; top: 0; height: 100%; width: 12px;
+    cursor: col-resize; z-index: 10;
+}
+
+.column-filter {
+    font-size: 11px; padding: 3px; border-radius: 4px;
+    border: 1px solid #dee2e6; width: 100%;
+}
+/* --- GENEL ERP TABLO VE BİLEŞEN STİLLERİ --- */
+
+.table-erp {
+    table-layout: fixed;
+    width: 100%;
+    background-color: white;
+    border-collapse: separate;
+}
+
+/* Tablo Başlıkları (Daha koyu ve net) */
+.table-erp thead th {
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    padding: 10px 8px;
+    border-bottom: 2px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+/* !!! İSTEDİĞİN GÜNCELLEME: Tüm satırları Bold yapar !!! */
+.table-erp tbody td {
+    font-weight: 600; /* Tüm hücreler kalın */
+    color: #1e293b;   /* Daha tok bir siyah/lacivert */
+    font-size: 11px;
+    padding: 8px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Gecikmiş (Overdue) Satırlar */
+.row-overdue td {
+    color: #b91c1c !important; /* Kırmızı ama okunabilir */
+    background-color: #fef2f2;  /* Hafif kırmızı arka plan */
+}
+
+/* Bölüm Başlıkları */
+.section-title {
+    border-left: 5px solid #1a4a72;
+    padding-left: 12px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+/* Resizer & Filtreler */
+.resizer {
+    position: absolute;
+    right: 0; top: 0; height: 100%; width: 4px;
+    cursor: col-resize; user-select: none; z-index: 10;
+}
+.resizer:hover { background-color: #3b82f6; width: 4px; }
+
+.column-filter {
+    font-size: 10px;
+    padding: 4px;
+    margin-top: 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    width: 100%;
+    font-weight: normal; /* Filtre kutusu yazısı normal kalsın ki veriyle karışmasın */
+}
