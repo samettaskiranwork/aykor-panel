@@ -72,3 +72,4 @@ async def serve_others(request: Request, page_name: str):
         name="dashboard/dashboard.html",
         context={"active_page": page_name}
     )
+

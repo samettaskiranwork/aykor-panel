@@ -19,10 +19,11 @@ async function handleLogout() {
     }
 }
 
-// URL/menü adı ile DOM id bazen farklı (ör. project_list / project-list → section-list)
+// URL/menü adı ile DOM id bazen farklı (ör. project_list / project-list / list → section-project_list)
 const SECTION_KEY_BY_PATH = {
-    project_list: 'list',
-    'project-list': 'list',
+    project_list: 'project_list',
+    'project-list': 'project_list',
+    list: 'project_list',
     add_project: 'add',
     'add-project': 'add'
 };

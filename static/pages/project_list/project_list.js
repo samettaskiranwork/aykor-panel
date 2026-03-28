@@ -65,13 +65,12 @@ const ProjectListModule = {
         async init() {
             console.log("📂 Project List verisi çekiliyor...");
             try {
-                // Not: API yolunu kontrol et, home_api içindeki veriyi de kullanabilirsin
-                const res = await fetch('/api/home/dashboard_data'); 
+                const res = await fetch('/api/project-list/');
                 const data = await res.json();
-                
-                // Backend'den 'all_projects' anahtarıyla gelen veriyi alıyoruz
-                ProjectListModule.state.fullData = data.all_projects || [];
-                
+
+                // Backend'den dönen tüm projeleri alıyoruz
+                ProjectListModule.state.fullData = data || [];
+
                 ProjectListModule.ui.renderHeaders();
                 ProjectListModule.logic.handleFilter();
             } catch (err) {
