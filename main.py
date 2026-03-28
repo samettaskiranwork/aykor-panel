@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 import os
 
-# 1. IMPORT DÜZELTMESİ: routers -> sunucu_isleri
+# 1. IMPORT DÜZELTMESİ (Doğru Klasör Yapısı)
 from sunucu_isleri import (
     projects, budget, future, firms, 
     suppliers, auth, home_api, 
@@ -14,11 +14,10 @@ from database import get_db_connection
 
 app = FastAPI()
 
-# 2. STATİK DOSYALAR (CSS, JS) BURADAN OKUNACAK
+# 2. STATİK DOSYALAR (CSS, JS)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# 3. ŞABLON (HTML) YOLU DÜZELTMESİ
-# Artık templates klasörü yok, her şey static/pages altında!
+# 3. ŞABLON (HTML) YOLU (Klasör Yapısına Uygun)
 base_path = os.path.dirname(__file__)
 templates = Jinja2Templates(directory=os.path.join(base_path, "static", "pages"))
 
@@ -38,26 +37,38 @@ app.include_router(edit_projects.router)
 async def serve_login(request: Request):
     if request.cookies.get("user_session"):
         return RedirectResponse(url="/home")
-    # login.html artık login klasörünün içinde!
-    return templates.TemplateResponse("login/login.html", {"request": request})
+    
+    # GÜNCEL YAZIM: Parametreleri isimlendirerek gönderiyoruz
+    return templates.TemplateResponse(
+        request=request,
+        name="login/login.html",
+        context={}
+    )
 
 @app.get("/home", response_class=HTMLResponse)
 async def serve_home(request: Request):
     if not request.cookies.get("user_session"):
         return RedirectResponse(url="/")
 
-    # dashboard.html artık dashboard klasörünün içinde!
-    return templates.TemplateResponse("dashboard/dashboard.html", {
-        "request": request,
-        "active_page": "home"
-    })
+    # GÜNCEL YAZIM: context içinde verileri paketliyoruz
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard/dashboard.html",
+        context={"active_page": "home"}
+    )
 
 @app.get("/{page_name}", response_class=HTMLResponse)
 async def serve_others(request: Request, page_name: str):
+    # API isteklerini veya özel rotaları engellememek için basit bir kontrol
+    if page_name.startswith("api") or "." in page_name:
+        return None
+
     if not request.cookies.get("user_session"):
         return RedirectResponse(url="/")
-    # Klasör yapısına göre yolu güncelledik
-    return templates.TemplateResponse("dashboard/dashboard.html", {
-        "request": request, 
-        "active_page": page_name
-    })
+
+    # GÜNCEL YAZIM: Sayfa adını context ile gönderiyoruz
+    return templates.TemplateResponse(
+        request=request,
+        name="dashboard/dashboard.html",
+        context={"active_page": page_name}
+    )
