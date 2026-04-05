@@ -91,13 +91,9 @@ window.onload = () => {
 
     console.log("📂 Algılanan Sayfa:", mainPath);
 
-    if (mainPath === 'edit_project') {
-        console.log("🛠 Edit Sayfası Moduna Giriliyor...");
-        navigate('edit_project', false);
-    } else {
-        navigate(mainPath, false);
-    }
-
+    // SADELEŞTİRİLMİŞ KISIM:
+    // Sadece navigate çağır, o zaten edit_project mi home mu anlıyor.
+    navigate(mainPath, false);
 };
 window.addEventListener('keydown', (e) => {
     // Alt + Z tuşuna basınca geliştirici modunu aç/kapat

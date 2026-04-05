@@ -11,27 +11,44 @@ async def get_project_for_edit(project_id: int):
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        # Sadece projects tablosundan çekiyoruz
-        # Sütun isimlerini veritabanındakiyle birebir aynı yaz (id mi, ID mi kontrol et!)
-        cursor.execute(
-            """
-    SELECT 
-        id, project_code, customer, subject, priority, 
-        item_quantity, deadline, proengineer, prostatus, 
-        project_type, tender_reference, annodate 
-    FROM projects 
-    WHERE id = %s
-""",
-            (project_id,),
-        )
+        
+        # JOIN kullanarak iki tabloyu birleştiriyoruz
+        # 'p' projects tablosu, 'ps' ise project_status tablosu için takma ad (alias)
+        sql = """
+            SELECT 
+                p.id, 
+                p.project_code, 
+                p.customer, 
+                p.subject, 
+                p.priority, 
+                p.item_quantity, 
+                p.deadline, 
+                TIME_FORMAT(p.deadline_time, '%H:%i') AS deadline_time, 
+                p.proengineer, 
+                p.prostatus, 
+                p.project_type, 
+                p.tender_reference, 
+                p.annodate,
+                ps.meaning AS status_meaning,
+                ps.description AS status_description
+            FROM projects p
+            LEFT JOIN project_status ps ON p.prostatus = ps.status
+            WHERE p.id = %s
+        """
+        
+        cursor.execute(sql, (project_id,))
         project = cursor.fetchone()
+        
         cursor.close()
         conn.close()
 
         if not project:
             raise HTTPException(status_code=404, detail="Proje bulunamadı.")
+            
         return project
     except Exception as e:
+        # Hatanın ne olduğunu terminalde daha net görmek için:
+        print(f"HATA OLUŞTU: {str(e)}") 
         raise HTTPException(status_code=500, detail=f"Sunucu hatası: {str(e)}")
 
 

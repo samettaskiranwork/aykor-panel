@@ -1,6 +1,7 @@
 /**
  * HOME MODULE - Radikal Temizlik & İstatistik Onarımı
  */
+{ // <-- En başa bunu koy
 const HomeModule = {
     state: {
         cachedProjects: [],
@@ -147,3 +148,4 @@ const HomeModule = {
 };
 
 function initHomeModule() { HomeModule.logic.init(); }
+}
