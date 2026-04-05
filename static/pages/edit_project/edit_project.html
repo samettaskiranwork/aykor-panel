@@ -1,0 +1,139 @@
+<div id="section-edit_project" class="section container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h4 class="text-secondary fw-normal">Project</h4>
+        <button class="btn btn-sm btn-outline-secondary" onclick="navigate('list')">Kapat</button>
+    </div>
+
+    <form id="editProjectForm" autocomplete="off">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="project_code">[Project No]</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="project_code" name="project_code"
+                            class="form-control form-control-sm bg-white" readonly>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="customer_group">Customer Group</label>
+                    <div class="col-sm-8">
+                        <div class="input-group input-group-sm">
+                            <input type="text" id="customer_group" name="customer_group" class="form-control">
+                            <button class="btn btn-outline-secondary" type="button">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="customer">Müşteri</label>
+                    <div class="col-sm-8">
+                        <select id="customer" name="customer" class="form-select form-select-sm">
+                            <option value="">Yükleniyor...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="tender_reference">Tender Reference</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="tender_reference" name="tender_reference"
+                            class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="item_quantity">Miktar</label>
+                    <div class="col-sm-8">
+                        <input type="number" id="item_quantity" name="item_quantity"
+                            class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="proengineer">[PE]</label>
+                    <div class="col-sm-8">
+                        <div class="border rounded p-2 bg-white" style="min-height: 80px;">
+                            <select id="proengineer" name="proengineer" class="form-select form-select-sm mb-2">
+                                <option value="">Seçiniz...</option>
+                            </select>
+                            <div id="selected_pe_tags">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="subject">Konu</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="subject" name="subject" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="annodate">[Anno Dt]</label>
+                    <div class="col-sm-8">
+                        <input type="date" id="annodate" name="annodate" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="deadline">[Deadline Date]</label>
+                    <div class="col-sm-8">
+                        <input type="date" id="deadline" name="deadline" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="deadline_time">[Deadline Time]</label>
+                    <div class="col-sm-8">
+                        <input type="time" id="deadline_time" name="deadline_time" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="project_type">[ProjectType]</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="project_type" name="project_type" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="prostatus">[ST]</label>
+                    <div class="col-sm-8">
+                        <select id="prostatus" name="prostatus" class="form-select form-select-sm">
+                            <option value="10 - WORKING PROJECT">10 - WORKING PROJECT</option>
+                            <option value="20 - COMPLETED">20 - COMPLETED</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-4 col-form-label text-secondary">[ST.Description]</label>
+                    <div class="col-sm-8">
+                        <textarea id="status_description" class="form-control form-control-sm bg-light" rows="3"
+                            readonly>ÇALIŞILAN PROJELER</textarea>
+                    </div>
+                </div>
+
+                <div class="row mb-3 align-items-center">
+                    <label class="col-sm-4 col-form-label text-secondary" data-db="priority">Öncelik</label>
+                    <div class="col-sm-8">
+                        <select id="priority" name="priority" class="form-select form-select-sm">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-sm px-4 shadow-sm">Değişiklikleri Kaydet</button>
+        </div>
+    </form>
+</div>

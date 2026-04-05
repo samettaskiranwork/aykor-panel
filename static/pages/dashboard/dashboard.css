@@ -1,0 +1,180 @@
+:root {
+    --aykor-blue: #1a4a72;
+    --aykor-hover: #245d8d;
+    --nav-height: 48px;
+    --status-bar-height: 32px;
+}
+
+/* --- SAYFA YAPISI --- */
+body {
+    background-color: #f4f7f9;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Navbar + Saat Şeridi kadar boşluk bırakıyoruz */
+    padding-top: calc(var(--nav-height) + var(--status-bar-height));
+}
+
+/* --- SABİT NAVBAR --- */
+.aykor-navbar {
+    background-color: var(--aykor-blue);
+    height: var(--nav-height);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2000;
+}
+
+/* --- GLOBAL DURUM ŞERİDİ (FREEZE) --- */
+.global-status-bar {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 100%;
+    height: var(--status-bar-height);
+    background-color: #0f2a42;
+    /* Navbar'dan bir ton koyu lacivert */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 11px;
+    z-index: 1050;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.status-left {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.status-right {
+    display: flex;
+    gap: 15px;
+}
+
+.global-clock {
+    display: flex;
+    gap: 5px;
+    opacity: 0.7;
+}
+
+.global-clock .city {
+    color: #a0aec0;
+    font-weight: 300;
+}
+
+.active-city {
+    opacity: 1;
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.nav-link-custom {
+    color: white !important;
+    text-decoration: none;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.nav-link-custom:hover {
+    background-color: var(--aykor-hover);
+}
+
+.home-icon {
+    font-size: 1.1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 20px;
+}
+
+.user-badge {
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+main {
+    padding: 20px;
+}
+
+.section {
+    display: none !important;
+}
+
+.section.active {
+    display: block !important;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-erp {
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #dee2e6;
+}
+
+/* --- GELİŞTİRİCİ MODU (DEBUG MODE) --- */
+
+/* Etiketlerin yanına veritabanı isimlerini fısıldayan kısım */
+label[data-db]::after {
+    content: " {" attr(data-db) "}";
+    color: #ff9f43;
+    /* ERP sistemlerinde dikkat çeken turuncu tonu */
+    font-family: 'Courier New', monospace;
+    /* Teknik bir görünüm için */
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-left: 6px;
+    opacity: 0.8;
+    display: none;
+    /* Başta gizli */
+}
+
+/* Body'ye .debug-mode sınıfı geldiğinde (Alt + Z ile) göster */
+body.debug-mode label[data-db]::after {
+    display: inline;
+}
+
+/* Geliştirici modu açıkken inputların çerçevesini hafifçe belirginleştirir */
+body.debug-mode .form-control:not([readonly]),
+body.debug-mode .form-select {
+    border-color: #ff9f43 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 159, 67, 0.1);
+}
+
+/* Geliştirici modu açıkken salt okunur (readonly) alanları grileştirir */
+body.debug-mode .form-control[readonly] {
+    background-color: #f1f2f6 !important;
+    border-style: dashed;
+}

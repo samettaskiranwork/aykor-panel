@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="/static/css/home.css">
+
+<div id="section-home" class="section">
+
+    <div class="row g-2 mb-4">
+        <div class="col-md-2 col-sm-4 col-6">
+            <div class="card-erp-lean">
+                <div class="card-vibe-border bg-danger"></div>
+                <span class="card-title-lean">Workıng Projects</span>
+                <h2 class="stat-number-lean" id="stat-working">-</h2>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6">
+            <div class="card-erp-lean">
+                <div class="card-vibe-border bg-info"></div>
+                <span class="card-title-lean">Budget Projects</span>
+                <h2 class="stat-number-lean" id="stat-budget">-</h2>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6">
+            <div class="card-erp-lean">
+                <div class="card-vibe-border bg-success"></div>
+                <span class="card-title-lean">Future Projects</span>
+                <h2 class="stat-number-lean" id="stat-future">-</h2>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6 d-none d-sm-block">
+            <div class="card-erp-lean card-placeholder-lean">
+                <span><i class="bi bi-plus-circle me-1"></i> Add Stat</span>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6 d-none d-sm-block">
+            <div class="card-erp-lean card-placeholder-lean">
+                <span><i class="bi bi-plus-circle me-1"></i> Add Stat</span>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-4 col-6 d-none d-sm-block">
+            <div class="card-erp-lean card-placeholder-lean">
+                <span><i class="bi bi-plus-circle me-1"></i> Add Stat</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-erp p-2 mb-4 bg-dark text-white shadow-sm" style="border-radius: 8px;">
+        <div class="row text-center align-items-center" style="font-size: 12px;">
+            <div class="col border-end border-secondary">
+                <div class="opacity-50" style="font-size: 9px;">NEW YORK</div>
+                <div id="clock-ny">00:00</div>
+            </div>
+            <div class="col border-end border-secondary">
+                <div class="opacity-50" style="font-size: 9px;">KIEL</div>
+                <div id="clock-de">00:00</div>
+            </div>
+            <div class="col border-end border-secondary text-warning">
+                <div class="fw-bold" style="font-size: 9px;">ISTANBUL</div>
+                <div class="fw-bold h6 mb-0" id="clock-tr">00:00</div>
+            </div>
+            <div class="col border-end border-secondary">
+                <div class="opacity-50" style="font-size: 9px;">SEOUL</div>
+                <div id="clock-kr">00:00</div>
+            </div>
+            <div class="col">
+                <div class="opacity-50" style="font-size: 9px;">SINGAPORE</div>
+                <div id="clock-sg">00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-erp p-3 shadow-sm mb-4">
+        <h6 class="fw-bold text-dark section-title">Working Project List - To be Offered This Week</h6>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-bordered table-striped table-erp mb-0" id="offeredTable">
+                <thead id="offeredTableHeader" class="table-light"></thead>
+                <tbody id="offeredTableBody">
+                    <tr>
+                        <td colspan="11" class="text-center py-3 text-muted">Checking deadlines...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card-erp p-3 shadow-sm">
+        <h6 class="fw-bold text-dark section-title">Working Project List</h6>
+        <div class="table-responsive">
+            <table class="table table-sm table-hover table-bordered table-striped table-erp mb-0" id="resizableTable">
+                <thead id="mainTableHeader" class="table-light"></thead>
+                <tbody id="mainTableBody">
+                    <tr>
+                        <td colspan="11" class="text-center py-3 text-muted">Scanning projects...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="/static/js/home.js"></script>

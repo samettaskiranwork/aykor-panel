@@ -5,6 +5,7 @@ from database import get_db_connection
 
 router = APIRouter(prefix="/api/add-project")
 
+
 class ProjectCreate(BaseModel):
     project_code: str
     priority: int
@@ -15,6 +16,7 @@ class ProjectCreate(BaseModel):
     deadline: Optional[str] = None
     proengineer: str
     project_type: str
+
 
 @router.get("/dropdowns")
 async def get_dropdowns():
@@ -33,6 +35,7 @@ async def get_dropdowns():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.post("/save")
 async def save_project(project: ProjectCreate):
     try:
@@ -41,9 +44,17 @@ async def save_project(project: ProjectCreate):
         sql = """INSERT INTO projects (project_code, priority, customer_group, customer, subject, 
                  item_quantity, deadline, proengineer, project_type, prostatus) 
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, '10')"""
-        values = (project.project_code, project.priority, project.customer_groups,
-                  project.customer, project.subject, project.item_quantity, 
-                  project.deadline, project.proengineer, project.project_type)
+        values = (
+            project.project_code,
+            project.priority,
+            project.customer_groups,
+            project.customer,
+            project.subject,
+            project.item_quantity,
+            project.deadline,
+            project.proengineer,
+            project.project_type,
+        )
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()

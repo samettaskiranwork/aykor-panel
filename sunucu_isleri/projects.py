@@ -128,3 +128,45 @@ async def update_project(item_id: int, project: ProjectCreate):
         return {"status": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+# routers/projects.py içine eklenecekler:
+
+@router.get("/get/{project_id}")
+async def get_project(project_id: int):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM projects WHERE id = %s", (project_id,))
+        project = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if not project:
+            raise HTTPException(status_code=404, detail="Proje bulunamadı")
+        return project
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/update/{project_id}")
+async def update_project(project_id: int, data: dict):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        sql = """
+            UPDATE projects SET 
+            subject=%s, customer=%s, item_quantity=%s, 
+            priority=%s, deadline=%s, deadline_time=%s, 
+            proengineer=%s, prostatus=%s, tender_reference=%s, annodate=%s
+            WHERE id=%s
+        """
+        values = (
+            data.get('subject'), data.get('customer'), data.get('item_quantity'),
+            data.get('priority'), data.get('deadline'), data.get('deadline_time'),
+            data.get('proengineer'), data.get('prostatus'), data.get('tender_reference'), 
+            data.get('annodate'), project_id
+        )
+        cursor.execute(sql, values)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
