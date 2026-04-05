@@ -30,6 +30,7 @@ base_path = os.path.dirname(__file__)
 templates = Jinja2Templates(directory=os.path.join(base_path, "static", "pages"))
 
 # Routerları bağla
+# Routerları bağla
 app.include_router(projects.router)
 app.include_router(budget.router)
 app.include_router(future.router)

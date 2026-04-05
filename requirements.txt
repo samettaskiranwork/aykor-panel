@@ -1,6 +1,7 @@
 fastapi
-uvicorn
+uvicorn[standard]
 jinja2
 mysql-connector-python
 python-multipart
 python-dotenv
+gunicorn

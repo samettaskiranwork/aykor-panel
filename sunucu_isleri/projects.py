@@ -5,6 +5,7 @@ from database import get_db_connection
 
 router = APIRouter(prefix="/api/projects")
 
+<<<<<<< HEAD
 
 # 1. VERİ MODELİ: Kullanıcının formdan gönderdiği yapı
 class ProjectCreate(BaseModel):
@@ -22,11 +23,28 @@ class ProjectCreate(BaseModel):
 # --- YARDIMCI FONKSİYONLAR: Dropdown (Açılır Menü) Verileri ---
 
 
+=======
+# 1. VERİ MODELİ: Kullanıcının formdan gönderdiği yapı
+class ProjectCreate(BaseModel):
+    project_code: str
+    priority: int           # 1-10 arası
+    customer_groups: str    # customer_groups tablosundan group_name
+    customer: str           # customers tablosundan customer_name
+    subject: str
+    item_quantity: int
+    deadline: Optional[str] = None
+    proengineer: str        # users tablosundan full_name
+    project_type: str       # 'System' veya 'Spare Part'
+
+# --- YARDIMCI FONKSİYONLAR: Dropdown (Açılır Menü) Verileri ---
+
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.get("/get-dropdowns")
 async def get_form_dropdowns():
     """Formdaki seçim kutularını doldurmak için tüm verileri tek seferde getirir"""
     try:
         conn = get_db_connection()
+<<<<<<< HEAD
         # Not: Eğer veritabanı sürücün destekliyorsa cursor(dictionary=True)
         # kullanmak işi daha da kolaylaştırır ama standart cursor üzerinden gidiyorum:
         cursor = conn.cursor()
@@ -70,6 +88,36 @@ async def get_form_dropdowns():
 # --- ANA FONKSİYONLAR ---
 
 
+=======
+        cursor = conn.cursor()
+        
+        # Müşteri Grupları
+        cursor.execute("SELECT group_name FROM customer_groups")
+        groups = [row[0] for row in cursor.fetchall()]
+        
+        # Müşteriler
+        cursor.execute("SELECT customer_name FROM customers")
+        customers = [row[0] for row in cursor.fetchall()]
+        
+        # Mühendisler (PE)
+        cursor.execute("SELECT full_name FROM users")
+        engineers = [row[0] for row in cursor.fetchall()]
+        
+        cursor.close()
+        conn.close()
+        
+        return {
+            "groups": groups,
+            "customers": customers,
+            "engineers": engineers,
+            "project_types": ["System", "Spare Part"]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Dropdown verileri çekilemedi: {str(e)}")
+
+# --- ANA FONKSİYONLAR ---
+
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.get("/")
 async def list_projects():
     """Tüm projeleri listeler"""
@@ -85,7 +133,10 @@ async def list_projects():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.post("/add")
 async def create_project(project: ProjectCreate):
     """Yeni projeyi veritabanına kaydeder"""
@@ -96,6 +147,7 @@ async def create_project(project: ProjectCreate):
                  (project_code, priority, customer_group, customer, subject, 
                   item_quantity, deadline, proengineer, project_type) 
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+<<<<<<< HEAD
 
         values = (
             project.project_code,
@@ -109,6 +161,13 @@ async def create_project(project: ProjectCreate):
             project.project_type,
         )
 
+=======
+        
+        values = (project.project_code, project.priority, project.customer_groups,
+                  project.customer, project.subject, project.item_quantity, 
+                  project.deadline, project.proengineer, project.project_type)
+        
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
@@ -117,7 +176,10 @@ async def create_project(project: ProjectCreate):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.get("/get/{item_id}")
 async def get_single_project(item_id: int):
     """Düzenleme için tek bir projenin verisini getirir"""
@@ -134,7 +196,10 @@ async def get_single_project(item_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.post("/update/{item_id}")
 async def update_project(item_id: int, project: ProjectCreate):
     """Mevcut projeyi günceller"""
@@ -145,6 +210,7 @@ async def update_project(item_id: int, project: ProjectCreate):
                  project_code=%s, priority=%s, customer_group=%s, customer=%s, 
                  subject=%s, item_quantity=%s, deadline=%s, proengineer=%s, 
                  project_type=%s WHERE id=%s"""
+<<<<<<< HEAD
 
         values = (
             project.project_code,
@@ -159,6 +225,13 @@ async def update_project(item_id: int, project: ProjectCreate):
             item_id,
         )
 
+=======
+        
+        values = (project.project_code, project.priority, project.customer_groups,
+                  project.customer, project.subject, project.item_quantity, 
+                  project.deadline, project.proengineer, project.project_type, item_id)
+        
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
         cursor.execute(sql, values)
         conn.commit()
         cursor.close()
@@ -166,11 +239,16 @@ async def update_project(item_id: int, project: ProjectCreate):
         return {"status": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+<<<<<<< HEAD
 
 
 # routers/projects.py içine eklenecekler:
 
 
+=======
+# routers/projects.py içine eklenecekler:
+
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.get("/get/{project_id}")
 async def get_project(project_id: int):
     try:
@@ -186,7 +264,10 @@ async def get_project(project_id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
 @router.post("/update/{project_id}")
 async def update_project(project_id: int, data: dict):
     try:
@@ -200,6 +281,7 @@ async def update_project(project_id: int, data: dict):
             WHERE id=%s
         """
         values = (
+<<<<<<< HEAD
             data.get("subject"),
             data.get("customer"),
             data.get("item_quantity"),
@@ -211,6 +293,12 @@ async def update_project(project_id: int, data: dict):
             data.get("tender_reference"),
             data.get("annodate"),
             project_id,
+=======
+            data.get('subject'), data.get('customer'), data.get('item_quantity'),
+            data.get('priority'), data.get('deadline'), data.get('deadline_time'),
+            data.get('proengineer'), data.get('prostatus'), data.get('tender_reference'), 
+            data.get('annodate'), project_id
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f
         )
         cursor.execute(sql, values)
         conn.commit()
@@ -218,4 +306,8 @@ async def update_project(project_id: int, data: dict):
         conn.close()
         return {"status": "success"}
     except Exception as e:
+<<<<<<< HEAD
         raise HTTPException(status_code=500, detail=str(e))
+=======
+        raise HTTPException(status_code=500, detail=str(e))
+>>>>>>> 36dacb608ec2f86b9eb764955357632b62c8904f

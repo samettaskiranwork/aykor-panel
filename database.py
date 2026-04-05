@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 # .env dosyasındaki değişkenleri yükle
 load_dotenv()
 
+
 def get_db_connection():
     # RENDER değişkeni sadece Render.com sunucularında otomatik olarak bulunur.
     # Senin bilgisayarında bu değişken olmadığı için kod direkt 'else' (Yerel) kısmına gidecek.
@@ -19,10 +20,10 @@ def get_db_connection():
             port=4042,
             user="dbpwf34135244",
             password=os.getenv("DB_PASSWORD"),
-            database="aykor_dev", 
-            ssl_ca="globalsignrootca.pem", # Render'da dosya ana dizinde
+            database="aykor_dev",
+            ssl_ca=cert_path,  # Artık tam adres gidiyor
             ssl_verify_cert=True,
-            connect_timeout=15 
+            connect_timeout=15,
         )
     else:
         # --- YEREL (SAMET'İN BİLGİSAYARI / LOCALHOST) AYARLARI ---
@@ -32,7 +33,7 @@ def get_db_connection():
             host="localhost",
             port=3306,
             user="root",
-            password=os.getenv("LOCAL_DB_PASSWORD"), # .env içindeki Aykor2026!
-            database="aykor_local"
+            password=os.getenv("LOCAL_DB_PASSWORD"),  # .env içindeki Aykor2026!
+            database="aykor_local",
             # Yerelde SSL sertifikasına gerek yok, o yüzden o satırları sildik.
         )
